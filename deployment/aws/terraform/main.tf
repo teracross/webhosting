@@ -38,6 +38,16 @@ resource "aws_s3_object" "css_sheet" {
   content_type = "text/css"
 }
 
+# note - for security purposes block public policy should be enabled when not modifying bucket policy
+resource "aws_s3_bucket_public_access_block" "bucket_public_access" {
+  bucket = aws_s3_bucket.webhosting.id
+
+  block_public_acls = true
+  block_public_policy = true 
+  ignore_public_acls = false
+  restrict_public_buckets = false
+}
+
 resource "aws_s3_bucket_website_configuration" "webhosting_config" {
   bucket = aws_s3_bucket.webhosting.id
 
@@ -61,13 +71,15 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 data "aws_iam_policy_document" "allow_public_access_policy" {
   statement {
     sid = "PublicReadObject"
+    actions = ["s3:GetObject"]
 
-    actions = [
-      "s3:GetObject"
-    ]
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
 
     resources = [
-      "arn:aws:s3:::&{webhosting.name}/*"
+      "arn:aws:s3:::${aws_s3_bucket.webhosting.bucket}/*"
     ]
   }
 }
