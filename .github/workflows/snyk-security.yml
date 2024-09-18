@@ -51,7 +51,8 @@ jobs:
         #- uses: actions/setup-node@v4
         #  with:
         #    node-version: 20
-
+      - name: Snyk Auth Token test
+        run: snyk test
         # Runs Snyk Code (SAST) analysis and uploads result into GitHub.
         # Use || true to not fail the pipeline
       - name: Snyk Code test
