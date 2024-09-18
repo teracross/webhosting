@@ -37,7 +37,6 @@ jobs:
     env:
       # This is where you will need to introduce the Snyk API token created with your Snyk account
       SNYK_TOKEN: ${{secrets.SNYK_TOKEN}}
-      ORG_ID: ${{secrets.ORG_ID}}
       
     steps:
       - uses: actions/checkout@v4
@@ -49,4 +48,4 @@ jobs:
         # Runs Snyk Infrastructure as Code (IaC) analysis and uploads result to Snyk.
         # Use || true to not fail the pipeline.
       - name: Snyk IaC test and report
-        run: snyk iac test -d --report # || true
+        run: snyk iac test --report # || true
