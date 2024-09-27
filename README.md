@@ -19,3 +19,13 @@ References that were handy/ useful for this project:
 Note - s3 bucket website is aved on http://<bucket_name>.s3-website.localhost.localstack.cloud:4566
 
 In order to test locally, `tflocal` was used in conjunction with localstack to emulate an AWS-like environment. However, one downside with this approach is that the actual bucket policy permissions will need to be tested on real AWS. 
+
+
+# TODODs/ future changes
+
+* [ ] move html page and css import to python script 
+* [ ] pull changes directly from Google Docs file
+* [ ] add deployment configuration for ansible
+* [ ] add github actions CI/CD 
+* [ ] add AWS CodePipline CI/CD
+* [ ] add localstack testing to CI/CD pipeline to verify html page works
