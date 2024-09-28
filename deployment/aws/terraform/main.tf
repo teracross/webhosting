@@ -9,17 +9,17 @@ terraform {
   required_version = ">= 1.2.0"
 }
 
-provider "aws" {
-  region = "us-west-2"
+variable "aws_root_user" {
+  type = string
 }
 
-resource "aws_s3_bucket" "webhosting" {
-  bucket = "eddevhosting"
+variable "aws_iam_user" {
+  type = string
+}
 
-  tags = {
-    Name        = "webhosting"
-    Environment = "Dev"
-  }
+
+provider "aws" {
+  region = "us-west-2"
 }
 
 resource "aws_s3_object" "index_page" {
@@ -38,21 +38,12 @@ resource "aws_s3_object" "css_sheet" {
   content_type = "text/css"
 }
 
-# note - for security purposes block public policy should be enabled when not modifying bucket policy
-resource "aws_s3_bucket_public_access_block" "bucket_public_access" {
-  bucket = aws_s3_bucket.webhosting.id
+resource "aws_s3_bucket" "webhosting" {
+  bucket = "eddevhosting"
 
-  block_public_acls = true
-  block_public_policy = true 
-  ignore_public_acls = false
-  restrict_public_buckets = false
-}
-
-resource "aws_s3_bucket_website_configuration" "webhosting_config" {
-  bucket = aws_s3_bucket.webhosting.id
-
-  index_document {
-    suffix = "index.html"
+  tags = {
+    Name        = "webhosting"
+    Environment = "Dev"
   }
 }
 
@@ -65,21 +56,103 @@ resource "aws_s3_bucket_versioning" "bucket_versioning" {
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = aws_s3_bucket.webhosting.id
-  policy = data.aws_iam_policy_document.allow_public_access_policy.json
+  policy = data.aws_iam_policy_document.bucket_access_policy.json
 }
 
-data "aws_iam_policy_document" "allow_public_access_policy" {
+data "aws_iam_policy_document" "bucket_access_policy" {
   statement {
-    sid = "PublicReadObject"
+    sid = "CloudFrontReadAccess"
     actions = ["s3:GetObject"]
 
     principals {
-      type        = "AWS"
-      identifiers = ["*"]
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
     }
-
     resources = [
-      "arn:aws:s3:::${aws_s3_bucket.webhosting.bucket}/*"
+      "arn:aws:s3:::eddevhosting/*",
+      "arn:aws:s3:::eddevhosting"
+    ]
+    condition {
+      test     = "ForAnyValue:StringEquals"
+      variable = "AWS:SourceARN"
+      values = ["${aws_cloudfront_distribution.webhosting_distribution.arn}"]
+    }
+  }
+
+  statement {
+    sid = "AdminAccess"
+    actions = ["*"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["${env.aws_root_user}", "${env.aws_iam_user}"]
+    }
+    resources = [
+      "${aws_s3_bucket.webhosting.arn}/*",
+      "${aws_s3_bucket.webhosting.arn}"
+    ]
+  }
+
+  statement {
+    sid = "CICD_Access"
+    actions = [
+      "s3:ListBucket",
+      "s3:GetBucketPolicy",
+      "s3:GetBucketPolicyStatus",
+      "s3:GetBucketVersioning",
+      "s3:GetObject",
+      "s3:GetObjectVersion",
+      "s3:PutObject",
+      "s3:PutBucketPolicy",
+      "s3:PutBucketVersioning"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["${env.aws_root_user}", "${env.aws_iam_user}"]
+    }
+    resources = [
+      "${aws_s3_bucket.webhosting.arn}/*",
+      "${aws_s3_bucket.webhosting.arn}"
     ]
   }
 }
+
+resource "aws_cloudfront_distribution" "webhosting_distribution" {
+  origin {
+    domain_name = aws_s3_bucket.webhosting.bucket_regional_domain_name
+    origin_access_control_id = aws_cloudfront_origin_access_control.bucket_oac.name
+    origin_id=aws_s3_bucket.webhosting.id
+  }
+
+  enabled             = true
+  is_ipv6_enabled     = true
+  
+  restrictions {
+    geo_restriction {
+      restriction_type = "whitelist"
+      locations = ["US"]
+    }
+  }
+  
+  viewer_certificate {
+    cloudfront_default_certificate= true
+  }
+
+  default_cache_behavior {
+    cache_policy_id= "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    allowed_methods= ["GET", "HEAD"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id= aws_s3_bucket.webhosting.id
+    viewer_protocol_policy = "redirect-to-https"
+  }
+}
+
+resource "aws_cloudfront_origin_access_control" "bucket_oac" {
+  name                              = "${aws_s3_bucket.webhosting.bucket}-oac"
+  description                       = "Origin Access Control for ${aws_s3_bucket.webhosting.bucket} S3 bucket"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
+
+#TODO: need to add WAF for CloudFront and enable origin shield
