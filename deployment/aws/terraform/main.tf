@@ -85,7 +85,7 @@ data "aws_iam_policy_document" "bucket_access_policy" {
 
     principals {
       type        = "Service"
-      identifiers = ["${env.aws_root_user}", "${env.aws_iam_user}"]
+      identifiers = ["${var.aws_root_user}", "${var.aws_iam_user}"]
     }
     resources = [
       "${aws_s3_bucket.webhosting.arn}/*",
@@ -108,7 +108,7 @@ data "aws_iam_policy_document" "bucket_access_policy" {
 
     principals {
       type        = "Service"
-      identifiers = ["${env.aws_root_user}", "${env.aws_iam_user}"]
+      identifiers = ["${var.aws_root_user}", "${var.aws_iam_user}"]
     }
     resources = [
       "${aws_s3_bucket.webhosting.arn}/*",
