@@ -36,7 +36,7 @@ Note - s3 bucket website is aved on http://<bucket_name>.s3-website.localhost.lo
 In order to test locally, `tflocal` was used in conjunction with localstack to emulate an AWS-like environment. However, one downside with this approach is that the actual bucket policy permissions will need to be tested on real AWS. 
 
 
-# TODODs/ future changes
+# TODOs/ future changes
 
 * [ ] move html page and css import to python script 
 * [ ] pull changes directly from Google Docs file
