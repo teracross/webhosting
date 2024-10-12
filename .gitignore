@@ -2,3 +2,11 @@
 *.hcl
 *.tfstate
 *.backup
+deploy_* 
+logs 
+logFile
+deploy
+**.terraform
+.terraform.tfstate.lock.info
+
+# TODO: create deployment file artifacts for GHA with GitSHA suffix
