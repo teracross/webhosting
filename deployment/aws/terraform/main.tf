@@ -21,7 +21,6 @@ variable "AWS_DEPLOYMENT_ROLE" {
   type = string
 }
 
-
 provider "aws" {
   region = "us-west-2"
 }
@@ -61,71 +60,38 @@ resource "aws_s3_object" "css_sheet" {
   depends_on   = [module.s3_bucket.bucket_policy]
 }
 
-
-data "aws_iam_policy_document" "webhosting_updates_role" {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "cloudfront:UpdateDistribution",
-      "cloudfront:DeleteOriginAccessControl"
-    ]
-
-    principals {
-      type        = "AWS"
-      identifiers = ["$(var.AWS_DEPLOYMENT_ROLE)}"]
-    }
-
-    resources = [
-      "${aws_cloudfront_distribution.webhosting_distribution.arn}"
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "wafv2:PutManagedRuleSetVersions",
-      "wafv2:DeleteLoggingConfiguration",
-      "wafv2:PutLoggingConfiguration",
-      "wafv2:PutFirewallManagerRuleGroups",
-      "wafv2:UpdateWebACL",
-      "wafv2:UpdateRuleGroup",
-      "wafv2:DeletePermissionPolicy",
-      "wafv2:PutPermissionPolicy",
-      "wafv2:DeleteWebACL"
-    ]
-
-    principals {
-      type        = "AWS"
-      identifiers = ["$(var.AWS_DEPLOYMENT_ROLE)}"]
-    }
-
-    resources = [
-      "${module.cloudfront_waf.wafv2_arn}"
-    ]
-  }
-}
-
 resource "aws_cloudfront_distribution" "webhosting_distribution" {
   origin {
     domain_name              = module.s3_bucket.s3_bucket_regional_domain_name
-    origin_access_control_id = aws_cloudfront_origin_access_control.bucket_oac.name
-    origin_id                = module.s3_bucket.s3_bucket_origin_id
+    origin_access_control_id = aws_cloudfront_origin_access_control.bucket_oac.id
+    origin_id                = module.s3_bucket.s3_bucket_regional_domain_name
+    connection_attempts = 3
+    connection_timeout = 10
+    origin_shield {
+      enabled = true
+      origin_shield_region = "us-west-2"
+    }
   }
-  web_acl_id = module.cloudfront_waf.wafv2_arn
+  # TODO: figure out how to enable public access for GET requests in WAF acl
+  # web_acl_id = module.cloudfront_waf.wafv2_arn
 
   enabled          = true
   is_ipv6_enabled  = true
-  retain_on_delete = true
-  http_version     = "http3"
+  http_version     = "http2and3"
+  comment = "Logging for CloudFront CDN"
 
   price_class = "PriceClass_100"
+
+  logging_config {
+    include_cookies = false
+    bucket          = "eddev-cloudfront-logging.s3.amazonaws.com"
+    prefix          = "webhosting"
+  }
 
   restrictions {
     geo_restriction {
       restriction_type = "none"
-      locations        = ["none"]
+      locations        =  []
     }
   }
   viewer_certificate {
@@ -134,9 +100,10 @@ resource "aws_cloudfront_distribution" "webhosting_distribution" {
 
   default_cache_behavior {
     cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    response_headers_policy_id = "60669652-455b-4ae9-85a4-c4c02393f86c"
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = module.s3_bucket.s3_bucket_id
+    target_origin_id       = module.s3_bucket.s3_bucket_regional_domain_name
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     compress               = true
@@ -161,13 +128,14 @@ resource "aws_cloudfront_origin_access_control" "bucket_oac" {
 
 # Granting CloudFront access to S3 bucket objects
 resource "aws_s3_bucket_policy" "bucket_policy_update" {
-  bucket     = module.s3_bucket.s3_bucket_arn
+  bucket     = module.s3_bucket.s3_bucket_id
   policy     = data.aws_iam_policy_document.s3_bucket_policy_update.json
-  depends_on = [aws_cloudfront_distribution.webhosting_distribution]
+  depends_on = [aws_cloudfront_distribution.webhosting_distribution, module.s3_bucket.s3_bucket_arn]
 }
 
 data "aws_iam_policy_document" "s3_bucket_policy_update" {
   source_policy_documents = [module.s3_bucket.s3_bucket_policy]
+  override_policy_documents = []
 
   statement {
     sid     = "CloudFrontReadAccess"
@@ -188,5 +156,5 @@ data "aws_iam_policy_document" "s3_bucket_policy_update" {
     }
   }
 
-  depends_on = [aws_cloudfront_distribution.webhosting_distribution]
+  depends_on = [aws_cloudfront_distribution.webhosting_distribution, module.s3_bucket.s3_bucket_arn]
 }
