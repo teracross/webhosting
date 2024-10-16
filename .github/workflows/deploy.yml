@@ -11,28 +11,28 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
+  deploy:
     name: 'Terraform'
     runs-on: ubuntu-latest
 
-  defaults:
-    run:
+    defaults:
+     run:
       shell: bash
 
-  steps:
-    - name: Initialize runner
-      uses: ./.github/actions/setup-action
+    steps:
+      - name: Initialize runner
+        uses: ./.github/actions/setup-action
 
-    - name: Download Plan File
-      uses: actions/download-artifact@v4
-      with: 
-        name: "${GITHUB_SHA}"
+      - name: Download Plan File
+        uses: actions/download-artifact@v4
+        with: 
+          name: "${GITHUB_SHA}"
 
-    - name: Terraform Init
-      uses: terraform init
+      - name: Terraform Init
+        uses: terraform init
 
-    - name: Terraform Deploy
-      run: terraform apply "${GITHUB_SHA}" 
+      - name: Terraform Deploy
+        run: terraform apply "${GITHUB_SHA}" 
 
 
 
