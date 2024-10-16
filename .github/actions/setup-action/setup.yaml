@@ -1,0 +1,28 @@
+# Note - AWS CLI comes installed by default on Githb Action runner
+name: 'Setup'
+description: 'Setup the Github Action runner with AWS credentials, Terraform CLI and the GitHub Repository code.'
+inputs:
+  terraform_version: 
+    description: 'Terraform Version'
+    required: true
+    default: 1.5.7
+outputs:
+# N/A
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ inputs.terraforom_version }}
+        terraform_wrapper: true
+
+    - name: Configure AWS OIDC auth
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        audience: sts.amazonaws.com.cn
+        aws-region: us-west-2
+        role-to-assume: arn:aws:iam::362747344858:role/GitHubActions_CICDRole
+
+    - name: Checkout Github repository
+      uses: actions/checkout@v4 
