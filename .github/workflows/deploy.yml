@@ -30,6 +30,10 @@ jobs:
       - name: DEBUG - print current dir and file contents
         run: pwd && ls
 
+      - name: DEBUG - print actions dir and file contents
+        working-directory: ./.github/actions/setup-action/
+        run: pwd && ls
+
       - name: Initialize runner
         uses: ./.github/actions/setup-action/action.yml
 
