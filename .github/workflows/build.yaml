@@ -3,6 +3,9 @@
 name: 'Terraform Build Only'
 
 on:
+  # TODO: undo after testing is complete
+  push:
+    branches: ["Automation"]
   pull_request:
     branches: ["main"]
 
