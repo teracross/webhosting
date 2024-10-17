@@ -23,6 +23,3 @@ runs:
         audience: sts.amazonaws.com.cn
         aws-region: us-west-2
         role-to-assume: arn:aws:iam::362747344858:role/GitHubActions_CICDRole
-
-    - name: Checkout Github repository
-      uses: actions/checkout@v4 

@@ -20,6 +20,9 @@ jobs:
         shell: bash
 
     steps:
+      - name: Checkout Github repository
+        uses: actions/checkout@v4 
+        
       - name: Initialize runner
         uses: ./.github/actions/setup-action
 
