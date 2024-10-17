@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v4 
 
       - name: Initialize runner
-        uses: ./actions/setup-action
+        uses: ./.github/actions/setup-action
 
       - name: Terraform Init
         run: terraform init
