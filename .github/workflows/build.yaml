@@ -31,7 +31,7 @@ jobs:
         run: pwd && ls
 
       - name: DEBUG - print workflow dir and file contents
-        working-directory: ./.github/workflow/
+        working-directory: ./.github/workflows/
         run: pwd && ls
 
       - name: DEBUG - print actions dir and file contents
