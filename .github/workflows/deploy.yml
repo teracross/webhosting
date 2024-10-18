@@ -27,7 +27,11 @@ jobs:
       - name: Checkout Github repository
         uses: actions/checkout@v4 
       
-      - name: DEBUG - print current dir and file contents
+      - name: DEBUG - print default working dir and file contents
+        run: pwd && ls
+      
+      - name: DEBUG - print workflow dir and file contents
+        working-directory: ./.github/workflow/
         run: pwd && ls
 
       - name: DEBUG - print actions dir and file contents
