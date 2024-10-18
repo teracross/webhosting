@@ -6,8 +6,6 @@ inputs:
     description: 'Terraform Version'
     required: true
     default: 1.5.7
-outputs:
-# N/A
 runs:
   using: "composite"
   steps:
