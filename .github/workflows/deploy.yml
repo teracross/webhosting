@@ -39,7 +39,7 @@ jobs:
         run: pwd && ls
 
       - name: Initialize runner
-        uses: ./.github/actions/setup-action/action.yml
+        uses: ./.github/actions/setup-action
 
       - name: Download Plan File
         uses: actions/download-artifact@v4
