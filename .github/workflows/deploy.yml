@@ -49,7 +49,7 @@ jobs:
       - name: Download Plan File
         uses: actions/download-artifact@v4
         with: 
-          name: "${GITHUB_SHA}"
+          name: $GITHUB_SHA
 
       - name: Terraform Init
         run: terraform init
@@ -61,7 +61,7 @@ jobs:
         run: terraform validate
 
       - name: Terraform Deploy
-        run: terraform apply "${GITHUB_SHA}" 
+        run: terraform apply "$GITHUB_SHA" 
 
 
 

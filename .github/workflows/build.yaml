@@ -50,10 +50,10 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan -input=false -out="${GITHUB_SHA}"
+        run: terraform plan -input=false -out=$GITHUB_SHA
 
       - name: Archive plan file 
         uses: actions/upload-artifact@v4
         with:
-          name: "${GITHUB_SHA}"
+          name: ${{ github.sha }}
           path: ./
