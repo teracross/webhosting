@@ -4,7 +4,7 @@ name: 'Terraform Deploy'
 
 on:
   workflow_run: 
-    workflows: ["Terraform Build Only"]
+    workflows: [Terraform Build Only]
     types: [completed]
     branches: 
       - 'main'
