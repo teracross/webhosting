@@ -24,9 +24,9 @@ jobs:
       TF_VAR_AWS_DEPLOYMENT_ROLE: ${{ secrets.AWS_DEPLOYMENT_ROLE}}
 
     defaults:
-     run:
-      shell: bash
-      working-directory: ./deployment/aws/terraform
+      run:
+        shell: bash
+        working-directory: ./deployment/aws/terraform
 
     steps:
       - name: Checkout Github repository
@@ -52,7 +52,7 @@ jobs:
           name: "${GITHUB_SHA}"
 
       - name: Terraform Init
-        uses: terraform init
+        run: terraform init
       
       - name: Terraform Format
         run: terraform fmt -check
