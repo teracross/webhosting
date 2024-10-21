@@ -3,11 +3,12 @@
 name: 'Terraform Deploy'
 
 on:
-  # TODO: undo after testing is complete
-  push:
-    branches: ["Automation"]
-  pull_request:
-    branches: ["main"]
+  workflow_run: 
+    workflows: ["Build"]
+    types: [completed]
+    branches: 
+      - 'main'
+      - 'Automation' # TODO: undo after testing is complete
 
 permissions:
   id-token: write
