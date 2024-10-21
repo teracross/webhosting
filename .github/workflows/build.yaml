@@ -1,0 +1,59 @@
+# Use Terraform to init, validate, plan w/ output file. Plan output file saved as GHA Artifact for deployment.
+
+name: 'Terraform Build Only'
+
+on:
+  # TODO: undo after testing is complete
+  push:
+    branches: ["Automation"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  id-token: write
+  contents: read  
+
+jobs:
+  build:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    env: 
+      TF_VAR_AWS_ROOT_USER: ${{ secrets.AWS_ROOT_USER }}
+      TF_VAR_AWS_IAM_USER: ${{ secrets.AWS_IAM_USER}}
+      TF_VAR_AWS_DEPLOYMENT_ROLE: ${{ secrets.AWS_DEPLOYMENT_ROLE}}
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./deployment/aws/terraform
+
+    steps:
+      - name: Checkout Github repository
+        uses: actions/checkout@v4 
+      
+      - name: DEBUG - print default working dir and file contents
+        run: pwd && ls
+
+      - name: DEBUG - print workflow dir and file contents
+        working-directory: ./.github/workflows/
+        run: pwd && ls
+
+      - name: DEBUG - print actions dir and file contents
+        working-directory: ./.github/actions/setup-action/
+        run: pwd && ls
+
+      - name: Initialize runner
+        uses: ./.github/actions/setup-action
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -input=false -out=$GITHUB_SHA
+
+      - name: Archive plan file 
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.sha }}
+          path: ./
