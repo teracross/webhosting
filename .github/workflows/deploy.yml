@@ -7,8 +7,8 @@ on:
     workflows: [Terraform Build Only]
     types: [completed]
     branches: 
-      - 'main'
-      - 'Automation' # TODO: undo after testing is complete
+      - main
+      - Automation # TODO: undo after testing is complete
 
 permissions:
   id-token: write
