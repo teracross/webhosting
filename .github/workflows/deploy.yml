@@ -16,7 +16,6 @@ permissions:
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: 'Terraform'
     runs-on: ubuntu-latest
 
