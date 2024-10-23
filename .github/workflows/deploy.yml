@@ -3,8 +3,14 @@
 name: 'Terraform Deploy'
 
 on:
-  pull_request:
-    types: [closed]
+  workflow_dispatch: 
+    inputs: 
+      github_sha: 
+        description: 'GitHub SHA for Terraform plan file used in deploy'
+        required: true
+        type: string
+  workflow_run:
+    workflows: [Terraform Build]
     branches: [main]
 
 permissions:
@@ -13,7 +19,6 @@ permissions:
 
 jobs:
   deploy:
-    if: ${{ github.event.pull_request.merged == 'true'}}
     name: 'Terraform Deployment'
     runs-on: ubuntu-latest
 
