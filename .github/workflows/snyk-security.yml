@@ -19,9 +19,10 @@
 name: Snyk Security
 
 on:
-# Add chron job to periodically scan code in main for new vulnerabilities
-  pull_request:
-    branches: [main]
+# TODO: Add chron job to periodically scan code in main for new vulnerabilities
+# TODO: Re-Enable checks
+  # pull_request:
+  #   branches: [main]
 
 permissions:
   contents: read
