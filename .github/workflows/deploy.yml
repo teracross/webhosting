@@ -3,8 +3,14 @@
 name: 'Terraform Deploy'
 
 on:
-  pull_request:
-    types: [closed]
+  workflow_dispatch: 
+    inputs: 
+      github_sha: 
+        description: 'GitHub SHA for Terraform plan file used in deploy'
+        required: true
+        type: string
+  workflow_run:
+    workflows: [Terraform Build]
     branches: [main]
 
 permissions:
@@ -13,7 +19,6 @@ permissions:
 
 jobs:
   deploy:
-    if: ${{ github.event.pull_request.merged == 'true'}}
     name: 'Terraform Deployment'
     runs-on: ubuntu-latest
 
@@ -21,6 +26,7 @@ jobs:
       TF_VAR_AWS_ROOT_USER: ${{ secrets.AWS_ROOT_USER }}
       TF_VAR_AWS_IAM_USER: ${{ secrets.AWS_IAM_USER}}
       TF_VAR_AWS_DEPLOYMENT_ROLE: ${{ secrets.AWS_DEPLOYMENT_ROLE}}
+      planFile: ${{ github.event_name == 'workflow_dispatch' && inputs.github_sha || github.sha }}
 
     defaults:
       run:
@@ -31,16 +37,16 @@ jobs:
       - name: Checkout Github repository
         uses: actions/checkout@v4 
       
-      - name: DEBUG - print default working dir and file contents
-        run: pwd && ls
+      # - name: DEBUG - print default working dir and file contents
+      #   run: pwd && ls
       
-      - name: DEBUG - print workflow dir and file contents
-        working-directory: ./.github/workflows/
-        run: pwd && ls
+      # - name: DEBUG - print workflow dir and file contents
+      #   working-directory: ./.github/workflows/
+      #   run: pwd && ls
 
-      - name: DEBUG - print actions dir and file contents
-        working-directory: ./.github/actions/setup-action/
-        run: pwd && ls
+      # - name: DEBUG - print actions dir and file contents
+      #   working-directory: ./.github/actions/setup-action/
+      #   run: pwd && ls
 
       - name: Initialize runner
         uses: ./.github/actions/setup-action
@@ -48,8 +54,8 @@ jobs:
       - name: Download Plan File
         uses: actions/download-artifact@v4
         with: 
-          name: ${{ github.sha }}
-
+          name: ${{env.planFile}}
+      
       - name: Terraform Init
         run: terraform init
       
