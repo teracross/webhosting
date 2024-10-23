@@ -65,20 +65,20 @@ resource "aws_cloudfront_distribution" "webhosting_distribution" {
     domain_name              = module.s3_bucket.s3_bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.bucket_oac.id
     origin_id                = module.s3_bucket.s3_bucket_regional_domain_name
-    connection_attempts = 3
-    connection_timeout = 10
+    connection_attempts      = 3
+    connection_timeout       = 10
     origin_shield {
-      enabled = true
+      enabled              = true
       origin_shield_region = "us-west-2"
     }
   }
   # TODO: figure out how to enable public access for GET requests in WAF acl
   # web_acl_id = module.cloudfront_waf.wafv2_arn
 
-  enabled          = true
-  is_ipv6_enabled  = true
-  http_version     = "http2and3"
-  comment = "Logging for CloudFront CDN"
+  enabled         = true
+  is_ipv6_enabled = true
+  http_version    = "http2and3"
+  comment         = "Logging for CloudFront CDN"
 
   price_class = "PriceClass_100"
 
@@ -91,7 +91,7 @@ resource "aws_cloudfront_distribution" "webhosting_distribution" {
   restrictions {
     geo_restriction {
       restriction_type = "none"
-      locations        =  []
+      locations        = []
     }
   }
   viewer_certificate {
@@ -99,14 +99,14 @@ resource "aws_cloudfront_distribution" "webhosting_distribution" {
   }
 
   default_cache_behavior {
-    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    cache_policy_id            = "658327ea-f89d-4fab-a63d-7e88639e58f6"
     response_headers_policy_id = "60669652-455b-4ae9-85a4-c4c02393f86c"
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = module.s3_bucket.s3_bucket_regional_domain_name
-    viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
-    compress               = true
+    allowed_methods            = ["GET", "HEAD"]
+    cached_methods             = ["GET", "HEAD"]
+    target_origin_id           = module.s3_bucket.s3_bucket_regional_domain_name
+    viewer_protocol_policy     = "redirect-to-https"
+    min_ttl                    = 0
+    compress                   = true
   }
 
   depends_on = [
@@ -134,7 +134,7 @@ resource "aws_s3_bucket_policy" "bucket_policy_update" {
 }
 
 data "aws_iam_policy_document" "s3_bucket_policy_update" {
-  source_policy_documents = [module.s3_bucket.s3_bucket_policy]
+  source_policy_documents   = [module.s3_bucket.s3_bucket_policy]
   override_policy_documents = []
 
   statement {
