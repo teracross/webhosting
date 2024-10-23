@@ -19,11 +19,10 @@
 name: Snyk Security
 
 on:
-  # TODO: undo after testing is complete
-  # push:
-  #   branches: ["*" ]
-  pull_request:
-    branches: ["main"]
+# TODO: Add chron job to periodically scan code in main for new vulnerabilities
+# TODO: Re-Enable checks
+  # pull_request:
+  #   branches: [main]
 
 permissions:
   contents: read
