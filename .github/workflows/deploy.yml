@@ -3,12 +3,9 @@
 name: 'Terraform Deploy'
 
 on:
-  workflow_run: 
-    workflows: [Terraform Build Only]
-    types: [completed]
-    branches: 
-      - "main"
-      - "Automation" # TODO: undo after testing is complete
+  pull_request:
+    types: [closed]
+    branches: [main]
 
 permissions:
   id-token: write
@@ -16,6 +13,7 @@ permissions:
 
 jobs:
   deploy:
+    if: ${{ github.event.pull_request.merged == 'true'}}
     name: 'Terraform'
     runs-on: ubuntu-latest
 
@@ -55,9 +53,6 @@ jobs:
       - name: Terraform Init
         run: terraform init
       
-      - name: Terraform Format
-        run: terraform fmt -check
-
       - name: Terraform Validate
         run: terraform validate
 
