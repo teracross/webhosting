@@ -10,3 +10,9 @@ deploy
 .terraform.tfstate.lock.info
 
 # TODO: create deployment file artifacts for GHA with GitSHA suffix
+
+# local build files
+event.json
+secrets
+deployment/aws/terraform/s3/s3deploy
+deployment/aws/terraform/waf/wafDeploy
