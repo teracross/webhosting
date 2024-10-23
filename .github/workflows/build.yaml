@@ -1,6 +1,6 @@
 # Use Terraform to init, validate, plan w/ output file. Plan output file saved as GHA Artifact for deployment.
 
-name: 'Terraform Build Only'
+name: 'Terraform Build'
 
 on:
   pull_request:
@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   build:
-    name: 'Terraform'
+    name: 'Terraform Build and Validation'
     runs-on: ubuntu-latest
 
     env: 

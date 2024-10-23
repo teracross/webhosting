@@ -14,7 +14,7 @@ permissions:
 jobs:
   deploy:
     if: ${{ github.event.pull_request.merged == 'true'}}
-    name: 'Terraform'
+    name: 'Terraform Deployment'
     runs-on: ubuntu-latest
 
     env: 
