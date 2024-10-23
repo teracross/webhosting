@@ -46,7 +46,7 @@ data "aws_iam_policy_document" "bucket_access_policy" {
   
   statement {
     sid     = "AdminAccess"
-    actions = ["*"]
+    actions = ["s3:*"]
 
     principals {
       type        = "AWS"
