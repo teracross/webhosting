@@ -1,6 +1,6 @@
-# Use Terraform to init, validate, plan w/ output file. Plan output file saved as GHA Artifact for deployment.
+# Use Terraform to init, validate, plan w/ output file and deploy (if changes merged to 'main'). Archive output file used for GHA Artifact for deployment.
 
-name: 'Terraform Build'
+name: 'Terraform Build and Deploy'
 
 on:
   push: 
@@ -13,8 +13,8 @@ permissions:
   contents: read  
 
 jobs:
-  build:
-    name: 'Terraform Build and Validation'
+  automate:
+    name: 'Terraform Build, Validation and Deployment'
     runs-on: ubuntu-latest
 
     env: 
@@ -62,3 +62,8 @@ jobs:
         with:
           name: ${{ github.sha }}
           path: ./
+    
+      # Deployment should only run once changes have been merged into master
+      - name: Terraform Deploy
+        if: github.event_name == 'push'
+        run: terraform apply $GITHUB_SHA
