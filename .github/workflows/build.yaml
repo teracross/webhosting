@@ -45,6 +45,11 @@ jobs:
       - name: Initialize runner
         uses: ./.github/actions/setup-action
 
+      - name: UnArchive Previous Terraform State Files
+        uses: actions/download-artifact@v4
+        with: 
+          name: 
+
       - name: Terraform Init
         run: terraform init
 
@@ -57,11 +62,11 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false -out=$GITHUB_SHA
 
-      - name: Archive plan file 
+      - name: Archive Terraform State files 
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.sha }}
-          path: ./
+          path: ./deployment/aws/terraform/$GITHUB_SHA
     
       # Deployment should only run once changes have been merged into master
       - name: Terraform Deploy
