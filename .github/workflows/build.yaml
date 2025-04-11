@@ -7,6 +7,12 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch: 
+    inputs: 
+      tags:
+        description: "Google AppScript Trigger for Deployment"
+        required: false
+        type: string
 
 permissions:
   id-token: write
