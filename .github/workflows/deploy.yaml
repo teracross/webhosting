@@ -3,16 +3,9 @@
 name: 'Terraform Build and Deploy'
 
 on:
-  push: 
+  workflow_run: 
+    workflows: ["Build"]
     branches: [main]
-  pull_request:
-    branches: [main]
-  workflow_dispatch: 
-    inputs: 
-      tags:
-        description: "Google AppScript Trigger for Deployment"
-        required: false
-        type: string
 
 permissions:
   id-token: write
@@ -50,6 +43,8 @@ jobs:
 
       - name: Initialize runner
         uses: ./.github/actions/setup-action
+
+      # TODO: download and configure artifacts: (1) HTML file from Google Drive, (2) terraform state files - cached for up to 90 days
 
       - name: Terraform Init
         run: terraform init
