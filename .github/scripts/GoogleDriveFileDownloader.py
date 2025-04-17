@@ -2,12 +2,13 @@ from googleapiclient.discovery import build
 from google.oauth2.service_account import Credentials
 from googleapiclient.http import MediaIoBaseDownload
 import io
+import os
 
 CLIENT_SECRETS_FILE = "services.json"
 SCOPES = ['https://www.googleapis.com/auth/drive']
 API_SERVICE_NAME = 'drive'
 API_VERSION = 'v3'
-FILE_ID = '<insert_file_id>'
+FILE_ID = os.environ['GOOGLE_FILE_ID']
 OUTPUT_FORMAT = 'text/html'
 
 
@@ -27,7 +28,7 @@ try:
 
     # Save the exported content (e.g., to a file)
     fh.seek(0)
-    with open("exported_file.html", "wb") as f: 
+    with open("index.html", "wb") as f: 
       f.write(fh.read())
     print("File exported successfully!")
 
