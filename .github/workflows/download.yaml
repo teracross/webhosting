@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
       
     env: 
-      GOOGLE_DRIVE_FILE_ID: ${{ secrets.FILE_ID }}
+      GOOGLE_FILE_ID: ${{ secrets.GOOGLE_FILE_ID }}
       GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
 
 
