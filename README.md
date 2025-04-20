@@ -6,6 +6,7 @@ Project utilizing various DevOps tech stacks for web hosting.
      - in order to do so s3 SHOULD NOT have website configuration enabled
 - Google Cloud permissioning for direct access to a single Google Drive file is not so straightforward
 - On Github, secrets stored under Secrets and Variables -> Actions can be accessed by anyone with collaborator access. Secrets and Variables -> Codespaces are encrypted, not passed to forks and are not accessible by all collaborators. 
+- Github Codespaces secrets are NOT accessible in Github Actions Workflows.
 
 
 # references
