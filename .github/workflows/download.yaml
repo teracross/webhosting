@@ -43,7 +43,7 @@ jobs:
           (echo $GOOGLE_SERVICE_ACCOUNT) >> services_encoded.json
           wc -l services_encoded.json
           git add services_encoded.json
-          ((cat services_encoded.json) | base64 -di) >> services.json
+          (cat services_encoded.json) | base64 -di >> services.json
           wc -l services.json
           git add services.json
 
