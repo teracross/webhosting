@@ -39,7 +39,13 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Create credentials file for Google
-        run: echo $GOOGLE_SERVICE_ACCOUNT | base64 -di > services.json
+        run: |
+          echo $GOOGLE_SERVICE_ACCOUNT > services_encoded.json
+          wc -l services_encoded.json
+          git add services_encoded.json
+          cat services_encoded.json | base64 -di > services.json
+          wc -l services.json
+          git add services.json
 
       - name: Download file from Google Drive
         run: python3 ./GoogleDriveFileDownloader.py
