@@ -40,7 +40,8 @@ jobs:
 
       - name: Create credentials file for Google
         run: |
-          (echo $GOOGLE_SERVICE_ACCOUNT | base64 -di) >> services.json
+          (echo $GOOGLE_SERVICE_ACCOUNT) >> services_encoded.json
+          (cat services_encoded.json | base64 -di) >> services.json
           wc -l services.json
 
       - name: Download file from Google Drive
@@ -55,5 +56,7 @@ jobs:
            overwrite: true
 
       - name: cleanup - ensure credentials removed from runner
-        run: rm -f services.json
+        run: |
+          rm -f services.json
+          rm -f services_decoded.json
         if: ${{ always() }}
