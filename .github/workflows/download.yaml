@@ -41,6 +41,7 @@ jobs:
       - name: Create credentials file for Google
         run: |
           (echo $GOOGLE_SERVICE_ACCOUNT) >> services_encoded.json
+          wc -l services_encoded.json
           (cat services_encoded.json | base64 -di) >> services.json
           wc -l services.json
 
