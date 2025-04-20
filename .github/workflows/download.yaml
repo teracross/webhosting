@@ -42,7 +42,9 @@ jobs:
         run: |
           (echo $GOOGLE_SERVICE_ACCOUNT) >> services_encoded.json
           wc -l services_encoded.json
-          (cat services_encoded.json) | base64 -di >> services.json
+          which cat
+          which base64
+          (cat services_encoded.json) | base64 -di) >> services.json
           wc -l services.json
 
       - name: Download file from Google Drive
