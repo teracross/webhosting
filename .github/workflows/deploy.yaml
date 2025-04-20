@@ -4,7 +4,8 @@ name: 'Terraform Build and Deploy'
 
 on:
   workflow_run: 
-    workflows: ["Build"]
+    workflows: [Build]
+    types: [completed]
     branches: [main]
 
 permissions:
@@ -15,6 +16,8 @@ jobs:
   automate:
     name: 'Terraform Build, Validation and Deployment'
     runs-on: ubuntu-latest
+    # automation only runs if previous workflow was successful
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} 
 
     env: 
       TF_VAR_AWS_ROOT_USER: ${{ secrets.AWS_ROOT_USER }}
