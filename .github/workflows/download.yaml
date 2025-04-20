@@ -60,6 +60,4 @@ jobs:
         run: |
           rm -f services.json
           rm -f services_decoded.json
-          rm -f services.json
-          rm -f services_decoded.json
         if: ${{ always() }}
