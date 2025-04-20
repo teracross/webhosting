@@ -44,7 +44,7 @@ jobs:
           wc -l services_encoded.json
           which cat
           which base64
-          (cat services_encoded.json) | base64 -di) >> services.json
+          ((cat services_encoded.json) | base64 -di) >> services.json
           wc -l services.json
 
       - name: Download file from Google Drive
