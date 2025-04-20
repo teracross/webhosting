@@ -18,7 +18,6 @@ jobs:
     env: 
       GOOGLE_FILE_ID: ${{ secrets.GOOGLE_FILE_ID }}
       GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-      SAMPLE_ENCODED: ${{ secrets.SAMPLE_ENCODED }}
 
 
     defaults:
@@ -38,34 +37,24 @@ jobs:
 
       - name: Install Python Dependencies
         run: pip install -r requirements.txt
-      
-      - name: Debug - test if base64 encoded secret stored in Github codespaces shows
-        run: | 
-          echo "Sample encoded payload from secrets: $SAMPLE_ENCODED"
-          echo $SAMPLE_ENCODED > sample_encoded.json
-          wc -c sample_encoded.json
-          echo "Contents of ENCODED file: $(cat sample_encoded.json)"
-          cat sample_encoded.json | base64 -di > sample_decoded.json
-          wc -c sample_decoded.json
-          echo "Contents of DECODED file: $(cat sample_decoded.json)"
 
-      # - name: Create credentials file for Google
-      #   run: |
-      #     echo $GOOGLE_SERVICE_ACCOUNT > services_encoded.json
-      #     wc -c services_encoded.json
-      #     cat services_encoded.json | base64 -di > services.json
-      #     wc -c services.json
+      - name: Create credentials file for Google
+        run: |
+          echo $GOOGLE_SERVICE_ACCOUNT > services_encoded.json
+          wc -c services_encoded.json
+          cat services_encoded.json | base64 -di > services.json
+          wc -c services.json
 
-      # - name: Download file from Google Drive
-      #   run: python3 ./GoogleDriveFileDownloader.py
+      - name: Download file from Google Drive
+        run: python3 ./GoogleDriveFileDownloader.py
 
-      # - name: Cache the file - to be used in deployment workflow
-      #   uses: actions/upload-artifact@v4
-      #   with: 
-      #      name: GoogleDriveFile
-      #      path: ./index.html
-      #      retention-days: 9
-      #      overwrite: true
+      - name: Cache the file - to be used in deployment workflow
+        uses: actions/upload-artifact@v4
+        with: 
+           name: GoogleDriveFile
+           path: ./index.html
+           retention-days: 9
+           overwrite: true
 
       - name: cleanup - ensure credentials removed from runner
         run: |
