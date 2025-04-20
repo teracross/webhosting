@@ -41,7 +41,7 @@ jobs:
       
       - name: Debug - test if base64 encoded secret stored in Github codespaces shows
         run: | 
-          echo "Sample encoded payload from secrets: $(SAMPLE_ENCODED)"
+          echo "Sample encoded payload from secrets: $SAMPLE_ENCODED"
           echo $SAMPLE_ENCODED > sample_encoded.json
           wc -c sample_encoded.json
           echo "Contents of ENCODED file: $(cat sample_encoded.json)"
