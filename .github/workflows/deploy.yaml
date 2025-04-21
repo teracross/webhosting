@@ -31,42 +31,43 @@ jobs:
     steps:
       - name: Checkout Github repository
         uses: actions/checkout@v4 
-      
-      # - name: DEBUG - print default working dir and file contents
-      #   run: pwd && ls
-
-      # - name: DEBUG - print workflow dir and file contents
-      #   working-directory: ./.github/workflows/
-      #   run: pwd && ls
-
-      # - name: DEBUG - print actions dir and file contents
-      #   working-directory: ./.github/actions/setup-action/
-      #   run: pwd && ls
 
       - name: Initialize runner
         uses: ./.github/actions/setup-action
 
-      # TODO: download and configure artifacts: (1) HTML file from Google Drive, (2) terraform state files - cached for up to 90 days
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Format
-        run: terraform fmt -check
-      
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Terraform Plan
-        run: terraform plan -input=false -out=$GITHUB_SHA
-
-      - name: Archive plan file 
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.sha }}
+      - name: Download cached HTML artifact from Github Artifact cache
+        uses: actions/download-artifact@v4
+        with: 
+          name: GoogleDriveFile
           path: ./
+        # TODO: download and configure artifacts: (1) HTML file from Google Drive, (2) terraform state files - cached for up to 90 days
+
+      - name: Verify HTML file downloaded
+        run: |
+          pwd
+          ls -la
+          cat ./index.html
+          
+
+      # - name: Terraform Init
+      #   run: terraform init
+
+      # - name: Terraform Format
+      #   run: terraform fmt -check
+      
+      # - name: Terraform Validate
+      #   run: terraform validate
+
+      # - name: Terraform Plan
+      #   run: terraform plan -input=false -out=$GITHUB_SHA
+
+      # - name: Archive plan file 
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ${{ github.sha }}
+      #     path: ./
     
-      # Deployment should only run once changes have been merged into master
-      - name: Terraform Deploy
-        if: github.event_name == 'push'
-        run: terraform apply $GITHUB_SHA
+      # # Deployment should only run once changes have been merged into master
+      # - name: Terraform Deploy
+      #   if: github.event_name == 'push'
+      #   run: terraform apply $GITHUB_SHA
