@@ -7,7 +7,7 @@ on:
     workflows: ["Download Google Drive File"]
     types: [completed]
     # TODO - temporary to enable workflow to appear for testing - revert below back to "main" when done with testing
-    branches: [AdditionalAutomation]
+    # branches: [main]
 
 permissions:
   id-token: write
