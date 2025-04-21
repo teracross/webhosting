@@ -4,7 +4,7 @@ name: 'Terraform Build and Deploy'
 
 on:
   workflow_run: 
-    workflows: [Build]
+    workflows: ["Download Google Drive File"]
     types: [completed]
     # TODO - temporary to enable workflow to appear for testing
     branches: [main, AdditionalAutomation]
