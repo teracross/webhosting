@@ -6,8 +6,8 @@ on:
   workflow_run: 
     workflows: ["Download Google Drive File"]
     types: [completed]
-    # TODO - temporary to enable workflow to appear for testing
-    branches: [main, AdditionalAutomation]
+    # TODO - temporary to enable workflow to appear for testing - revert below back to "main" when done with testing
+    branches: [AdditionalAutomation]
 
 permissions:
   id-token: write
