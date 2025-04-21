@@ -8,6 +8,8 @@ on:
     types: [completed]
     # TODO - temporary to enable workflow to appear for testing
     branches: [main, AdditionalAutomation]
+  push:  # TODO - temporary to enable workflow to appear for testing
+    branches: [AdditionalAutomation]
 
 permissions:
   id-token: write
