@@ -7,8 +7,6 @@ on:
         description: "Google AppScript Trigger for Deployment"
         required: false
         type: string
-  push:  # TODO - temporary to enable workflow to appear for testing
-    branches: [AdditionalAutomation]
 
 jobs:
   download: 
