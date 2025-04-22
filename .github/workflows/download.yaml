@@ -1,0 +1,61 @@
+name: 'Download Google Drive File'
+
+on:
+  workflow_dispatch: 
+    inputs: 
+      tags:
+        description: "Google AppScript Trigger for Deployment"
+        required: false
+        type: string
+
+jobs:
+  download: 
+    name: Install Python and Download File from Google Drive
+    runs-on: ubuntu-latest
+      
+    env: 
+      GOOGLE_FILE_ID: ${{ secrets.GOOGLE_FILE_ID }}
+      GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./.github/scripts
+
+    steps:
+      - name: Checkout Github repository
+        uses: actions/checkout@v4 
+
+      - name: setup Python 3.10+ on runner
+        uses: actions/setup-python@v5
+        with: 
+          python-version: '3.13'
+          cache: 'pip' # caching pip dependencies
+
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create credentials file for Google
+        run: |
+          echo $GOOGLE_SERVICE_ACCOUNT > services_encoded.json
+          wc -c services_encoded.json
+          cat services_encoded.json | base64 -di > services.json
+          wc -c services.json
+
+      - name: Download file from Google Drive
+        run: python3 ./GoogleDriveFileDownloader.py
+
+      - name: Cache the file - to be used in deployment workflow
+        uses: actions/upload-artifact@v4
+        with: 
+           name: GoogleDriveFile
+           path: ./index.html
+           retention-days: 9
+           overwrite: true
+
+      - name: cleanup - ensure credentials removed from runner
+        run: |
+          rm -f services.json
+          rm -f services_decoded.json
+        if: ${{ always() }}

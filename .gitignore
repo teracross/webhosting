@@ -16,3 +16,5 @@ event.json
 secrets
 deployment/aws/terraform/s3/s3deploy
 deployment/aws/terraform/waf/wafDeploy
+.vscode/
+.venv/
