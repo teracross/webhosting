@@ -4,9 +4,8 @@ name: 'Terraform Build and Deploy'
 
 on:
   workflow_run: 
-    workflows: [Build]
+    workflows: ['Download Google Drive File']
     types: [completed]
-    branches: [main]
 
 permissions:
   id-token: write
