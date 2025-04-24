@@ -3,11 +3,12 @@
 name: 'Terraform Build and Deploy'
 
 on:
-  workflow_run: 
-    workflows: ["Download Google Drive File"]
-    types: [completed]
-    # TODO - temporary to enable workflow to appear for testing - revert below back to "main" when done with testing
-    # branches: [main]
+  workflow_call: 
+    inputs: 
+      artifact-name: 
+        required: true
+        type: string
+        description: Name of the file to be deployed to S3
 
 permissions:
   id-token: write
