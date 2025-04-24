@@ -26,7 +26,7 @@ jobs:
         working-directory: ./.github/scripts
 
     outputs: 
-      file-byte-count:  ${{steps.verification.outputs.test}}
+      non-empty-artifact-exists:  ${{steps.verification.outputs.test}}
 
     steps:
       - name: Checkout Github repository
@@ -53,7 +53,7 @@ jobs:
 
       - id: verification
         name: Return the byte count of the file downloaded
-        run:  wc -c index.html
+        run:  test -s index.html
 
       - name: Cache the file - to be used in deployment workflow
         uses: actions/upload-artifact@v4
@@ -77,5 +77,5 @@ jobs:
     permissions:
       id-token: write
       contents: read 
-    if: ${{ needs.download.outputs.file-byte-count > 1 }}
+    if: ${{ needs.download.outputs.non-empty-artifact-exists }}
         
