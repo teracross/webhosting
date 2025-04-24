@@ -23,6 +23,9 @@ jobs:
         shell: bash
         working-directory: ./.github/scripts
 
+    outputs: 
+      file-byte-count:  ${{steps.verification.outputs.test}}
+
     steps:
       - name: Checkout Github repository
         uses: actions/checkout@v4 
@@ -45,6 +48,10 @@ jobs:
 
       - name: Download file from Google Drive
         run: python3 ./GoogleDriveFileDownloader.py
+
+      - id: verification
+        name: Return the byte count of the file downloaded
+        run:  wc -c index.html
 
       - name: Cache the file - to be used in deployment workflow
         uses: actions/upload-artifact@v4
