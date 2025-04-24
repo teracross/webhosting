@@ -52,7 +52,7 @@ jobs:
         run: python3 ./GoogleDriveFileDownloader.py
 
       - id: verification
-        name: Return the byte count of the file downloaded
+        name: Verify non-empty file was downloaded
         run:  test -s index.html
 
       - name: Cache the file - to be used in deployment workflow
@@ -62,11 +62,13 @@ jobs:
            path: ./index.html
            retention-days: 9
            overwrite: true
+        if: ${{ steps.verification.outputs }}
 
-      - name: cleanup - ensure credentials removed from runner
+      - name: cleanup - ensure credentials and temporary files removed from runner
         run: |
           rm -f services.json
           rm -f services_decoded.json
+          rm -f index.html
         if: ${{ always() }} 
 
   trigger-deployment: 
