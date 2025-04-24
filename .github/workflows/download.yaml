@@ -74,5 +74,8 @@ jobs:
     needs: download
     with: 
       artifact-name: $ARTIFACT_NAME
+    permissions:
+      id-token: write
+      contents: read 
     if: ${{ needs.download.outputs.file-byte-count > 1 }}
         

@@ -7,6 +7,7 @@ on:
     workflows: ['Download Google Drive File']
     types: [completed]
 
+# Redundant, however leaving here for good measure as this is required
 permissions:
   id-token: write
   contents: read  
