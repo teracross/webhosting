@@ -26,7 +26,7 @@ jobs:
         working-directory: ./.github/scripts
 
     outputs: 
-      non-empty-artifact-exists:  ${{steps.verification.outputs.test}}
+      non-empty-artifact-exists:  ${{steps.verification.outputs}}
 
     steps:
       - name: Checkout Github repository
@@ -53,7 +53,7 @@ jobs:
 
       - id: verification
         name: Verify non-empty file was downloaded
-        run:  test -s index.html
+        run:  test -s index.html >> "$GITHUB_OUTPUT"
 
       - name: Cache the file - to be used in deployment workflow
         uses: actions/upload-artifact@v4
