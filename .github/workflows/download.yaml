@@ -20,7 +20,6 @@ jobs:
       GOOGLE_FILE_ID: ${{ secrets.GOOGLE_FILE_ID }}
       GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
 
-
     defaults:
       run:
         shell: bash
@@ -68,4 +67,12 @@ jobs:
         run: |
           rm -f services.json
           rm -f services_decoded.json
-        if: ${{ always() }}
+        if: ${{ always() }} 
+
+  trigger-deployment: 
+    uses: ./.github/workflows/deploy.yaml
+    needs: download
+    with: 
+      artifact-name: $ARTIFACT_NAME
+    if: ${{ needs.download.outputs.file-byte-count > 1 }}
+        
