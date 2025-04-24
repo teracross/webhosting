@@ -10,6 +10,7 @@ on:
         type: string
         description: Name of the file to be deployed to S3
 
+# Redundant, however leaving here for good measure as this is required
 permissions:
   id-token: write
   contents: read  
