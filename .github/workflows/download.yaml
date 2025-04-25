@@ -75,7 +75,7 @@ jobs:
         if: ${{ always() }} 
 
   trigger-deployment: 
-    uses: ./.github/workflows/deploy.yaml
+    uses:  teracross/webhosting/.github/workflows/deploy.yaml@AdditionalAutomation
     needs: download
     with: 
       artifact-name: $ARTIFACT_NAME
