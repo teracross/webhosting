@@ -45,18 +45,9 @@ module "cloudfront_waf" {
 resource "aws_s3_object" "index_page" {
   bucket       = module.s3_bucket.s3_bucket_id
   key          = "index.html"
-  source       = "../../../index.html"
-  etag         = md5("../../../index.html}")
+  source       = "index.html"
+  etag         = md5("index.html}")
   content_type = "text/html"
-  depends_on   = [module.s3_bucket.bucket_policy]
-}
-
-resource "aws_s3_object" "css_sheet" {
-  bucket       = module.s3_bucket.s3_bucket_id
-  key          = "/css/styles.css"
-  source       = "../../../css/styles.css"
-  etag         = md5("../../../css/syltes.css")
-  content_type = "text/css"
   depends_on   = [module.s3_bucket.bucket_policy]
 }
 
