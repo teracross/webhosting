@@ -64,7 +64,7 @@ jobs:
       - name: Cache the file - to be used in deployment workflow
         uses: actions/upload-artifact@v4
         with: 
-           name: "$ARTIFACT_NAME"
+           name: ${{env.ARTIFACT_NAME}}
            path: ./index.html
            retention-days: 9
            overwrite: true
@@ -81,7 +81,7 @@ jobs:
     uses:  teracross/webhosting/.github/workflows/deploy.yaml@AdditionalAutomation
     needs: download
     with: 
-      artifact-name: "$ARTIFACT_NAME"
+      artifact-name: ${{github.env.ARTIFACT_NAME}}
     permissions:
       id-token: write
       contents: read 
