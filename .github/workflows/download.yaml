@@ -60,7 +60,7 @@ jobs:
         run:  echo "nonEmpty=$(test -s index.html)" >> "$GITHUB_OUTPUT"
 
       - name: Validate job outputs store properly
-        run: echo "Job output value is $((${{steps.verification.outputs.file}} && true && echo "true")|| echo "false")"
+        run: echo "Job output value is ${{steps.verification.outputs.file}} && true && echo "true"|| echo "false" "
 
       - name: Cache the file - to be used in deployment workflow
         uses: actions/upload-artifact@v4
