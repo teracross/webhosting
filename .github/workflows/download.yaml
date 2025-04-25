@@ -4,6 +4,7 @@ env:
   ARTIFACT_NAME: GoogleDriveFile
 
 on:
+  # TODO: swap the workflow dispatch to trigger on the deployment flow and make the download workflow the called resuable workflow
   workflow_dispatch: 
     inputs: 
       tags:
@@ -59,9 +60,7 @@ jobs:
         run:  echo "nonEmpty=$(test -s index.html)" >> "$GITHUB_OUTPUT"
 
       - name: Validate job outputs store properly
-        env: 
-          test_value: ${{steps.verification.outputs.file}}
-        run: echo "Value of file.nonEmpty is " $(${{env.test_value}} && true  && echo "non-empty" || echo "empty")
+        run: echo "Job output value is $((${{steps.verification.outputs.file}} && true && echo "true")|| echo "false")"
 
       - name: Cache the file - to be used in deployment workflow
         uses: actions/upload-artifact@v4
