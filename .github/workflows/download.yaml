@@ -60,7 +60,7 @@ jobs:
         run:  echo "nonEmpty=$(test -s index.html)" >> "$GITHUB_OUTPUT"
 
       - name: Validate job outputs store properly
-        run: echo "Job output value is ${{steps.verification.outputs.file}} && true && echo "true"|| echo "false" "
+        run: echo "Job output value is ${{steps.verification.outputs.file.nonEmpty}} && true && echo "true"|| echo "false" "
 
       - name: Cache the file - to be used in deployment workflow
         uses: actions/upload-artifact@v4
@@ -69,7 +69,7 @@ jobs:
            path: ./index.html
            retention-days: 9
            overwrite: true
-        if: ${{ steps.verification.outputs.file }} && true
+        if: ${{ steps.verification.outputs.file.nonEmpty }} && true
 
       - name: cleanup - ensure credentials and temporary files removed from runner
         run: |
@@ -86,5 +86,5 @@ jobs:
     permissions:
       id-token: write
       contents: read 
-    if: ${{ needs.download.outputs.file }} && true
+    if: ${{ needs.download.outputs.file.nonEmpty }} && true
         
