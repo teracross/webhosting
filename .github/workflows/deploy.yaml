@@ -42,8 +42,9 @@ jobs:
         uses: actions/download-artifact@v4
         with: 
           name: GoogleDriveFile
-          path: ./
-        # TODO: download and configure artifacts: (1) HTML file from Google Drive, (2) terraform state files - cached for up to 90 days
+          path: ./deployment/aws/terraform
+      
+      # TODO: download terraform state files - cached for up to 90 days
 
       - name: Verify HTML file downloaded
         run: |
