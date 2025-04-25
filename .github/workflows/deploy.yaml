@@ -17,7 +17,6 @@ jobs:
     name: 'Terraform Build, Validation and Deployment'
     runs-on: ubuntu-latest
     # automation only runs if previous workflow was successful
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} 
 
     env: 
       TF_VAR_AWS_ROOT_USER: ${{ secrets.AWS_ROOT_USER }}
@@ -47,7 +46,7 @@ jobs:
         run: |
           pwd
           ls -la
-          cat ./index.html
+          test -s index.html
           
 
       # - name: Terraform Init
