@@ -65,7 +65,7 @@ jobs:
            path: ./index.html
            retention-days: 9
            overwrite: true
-        if: ${{ steps.verification.outputs.file.nonEmpty }}
+        if: ${{ steps.verification.outputs.file.nonEmpty }} && true
 
       - name: cleanup - ensure credentials and temporary files removed from runner
         run: |
@@ -82,5 +82,5 @@ jobs:
     permissions:
       id-token: write
       contents: read 
-    if: ${{ needs.download.outputs.file.nonEmpty }}
+    if: ${{ needs.download.outputs.file.nonEmpty }} && true
         
