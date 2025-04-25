@@ -61,7 +61,7 @@ jobs:
       - name: Validate job outputs store properly
         env: 
           test_value: ${{steps.verification.outputs.file}}
-        run: echo "Value of file.nonEmpty is ($test_value && true && echo "non-empty" || echo "empty")"
+        run: echo "Value of file.nonEmpty is $(${{env.test_value}} && true && echo "non-empty" || echo "empty")"
 
       - name: Cache the file - to be used in deployment workflow
         uses: actions/upload-artifact@v4
