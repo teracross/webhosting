@@ -59,13 +59,15 @@ jobs:
         name: Verify non-empty file was downloaded
         run:  |
           if [ -s index.html ]; then
-            echo ":set-output name=nonEmpty::'true'"
+            echo "nonEmpty=true" >> $GITHUB_OUTPUT
           else 
-            echo ":set-output name=nonEmpty::'false'"
+            echo "nonEmpty=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Validate job outputs stored properly
-        run: echo "${{ format( 'Job output is {0})', toJson(steps.verification.outputs.file) ) }}"
+        env: 
+          isFilePresentAndFilled: ${{steps.verification.outputs.nonEmpty}}
+        run: echo "Job output is $isFilePresentAndFilled"
 
       - name: Cache the file - to be used in deployment workflow
         uses: actions/upload-artifact@v4
