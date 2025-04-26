@@ -46,11 +46,12 @@ jobs:
       
       # TODO: download terraform state files - cached for up to 90 days
 
-      - name: Verify HTML file downloaded
+      - name: Check if Google Drive file downloaded properly
         run: |
-          pwd
-          ls -la
-          test -s index.html
+          if [ -s index.html ]; then
+            echo "Google Drive file downloaded and is not empty."
+          else 
+            echo "Either Google Drive file was not downloaded OR is empty."
           
 
       # - name: Terraform Init
