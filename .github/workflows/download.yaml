@@ -65,9 +65,7 @@ jobs:
           fi
 
       - name: Validate job outputs stored properly
-        env: 
-          isFilePresentAndFilled: ${{steps.verification.outputs.nonEmpty}}
-        run: echo "Job output is $isFilePresentAndFilled"
+        run: echo "Job output is ${{ toJson(steps.verification.outputs.nonEmpty) }}"
 
       - name: Cache the file - to be used in deployment workflow
         uses: actions/upload-artifact@v4
