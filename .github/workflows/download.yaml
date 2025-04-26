@@ -65,7 +65,7 @@ jobs:
           fi
 
       - name: Validate job outputs stored properly
-        run: echo "${{ format('Job output is {0})', toJson(steps.verification.outputs.file)) }}"
+        run: echo "${{ format('Job output is {0})', steps.verification.outputs.file) }}"
 
       - name: Cache the file - to be used in deployment workflow
         uses: actions/upload-artifact@v4
