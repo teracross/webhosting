@@ -59,9 +59,9 @@ jobs:
         name: Verify non-empty file was downloaded
         run:  |
           if [ -s index.html ]; then
-            echo "nonEmpty='true'" >> "$GITHUB_OUTPUT"
+            echo "nonEmpty='true'" >> $GITHUB_OUTPUT
           else 
-            echo "nonEmpty='false'" >> "$GITHUB_OUTPUT"
+            echo "nonEmpty='false'" >> $GITHUB_OUTPUT
           fi
 
       - name: Validate job outputs stored properly
