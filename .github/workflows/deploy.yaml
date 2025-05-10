@@ -42,15 +42,32 @@ jobs:
           name: GoogleDriveFile
           path: ./deployment/aws/terraform
       
-      # TODO: download terraform state files - cached for up to 90 days
-
       - name: Check if Google Drive file downloaded properly from cache
         run: |
           if [ -s index.html ]; then
             echo "Google Drive file downloaded and is not empty."
           else 
             echo "Either Google Drive file was not downloaded OR is empty."
+
+      - name: Download Terraform State and Lock Files
+        uses: actions/download-artifact@v4
+        with: 
+          name: ${{env.TF_ARTIFACTS_NAME}}
+          path: ./deployments/aws/terraform
           
+      - name: Verify Terraform TfState File Downloaded
+        run: |
+          if [ -s terraform.tfstate ]; then
+            echo "Terraform tfstate file downloaded and is not empty."
+          else 
+            echo "Terraform tfstate file was not downloaded OR is empty."
+
+      - name: Verify Terraform Lock-HCL File Downloaded
+        run: |
+          if [ -s .terraform.lock.hcl ]; then
+            echo "Terraform Lock-HCL file downloaded and is not empty."
+          else 
+            echo "Terraform Lock-HCL file was not downloaded OR is empty."
 
       # - name: Terraform Init
       #   run: terraform init
@@ -70,7 +87,7 @@ jobs:
       #     name: ${{ github.sha }}
       #     path: ./
     
-      # # Deployment should only run once changes have been merged into master
+      # Deployment should only run once changes have been merged into master
       # - name: Terraform Deploy
       #   if: github.event_name == 'push'
       #   run: terraform apply $GITHUB_SHA
@@ -94,3 +111,4 @@ jobs:
           rm -f terraform.tfstate
           rm -f .terraform.lock.hcl
           rm -f index.html
+        
