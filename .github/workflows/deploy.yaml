@@ -81,11 +81,11 @@ jobs:
       # - name: Terraform Plan
       #   run: terraform plan -input=false -out=$GITHUB_SHA
 
-      # - name: Archive plan file 
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ github.sha }}
-      #     path: ./
+      - name: Archive plan file 
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.sha }}
+          path: ./${{ github.sha }}
     
       # Deployment should only run once changes have been merged into master
       # - name: Terraform Deploy
