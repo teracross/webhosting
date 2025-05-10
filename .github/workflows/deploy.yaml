@@ -86,3 +86,11 @@ jobs:
             ./.terraform.lock.hcl
           include-hidden-files: true
           overwrite: true
+
+            # Cleanup - ensure downloaded artifacts are removed from runner
+      - name: Cleanup - remove artifacts
+        if: always()
+        run: |
+          rm -f terraform.tfstate
+          rm -f .terraform.lock.hcl
+          rm -f index.html
