@@ -75,6 +75,7 @@ jobs:
            retention-days: 9
            overwrite: true
         if: ${{ steps.verification.outputs.nonEmpty }}
+        
       - name: cleanup - ensure credentials and temporary files removed from runner
         run: |
           rm -f services.json
