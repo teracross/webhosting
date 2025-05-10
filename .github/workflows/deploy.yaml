@@ -22,6 +22,7 @@ jobs:
       TF_VAR_AWS_ROOT_USER: ${{ secrets.AWS_ROOT_USER }}
       TF_VAR_AWS_IAM_USER: ${{ secrets.AWS_IAM_USER}}
       TF_VAR_AWS_DEPLOYMENT_ROLE: ${{ secrets.AWS_DEPLOYMENT_ROLE}}
+      TF_ARTIFACTS_NAME: TFStateAndLockFiles
 
     defaults:
       run:
@@ -73,3 +74,15 @@ jobs:
       # - name: Terraform Deploy
       #   if: github.event_name == 'push'
       #   run: terraform apply $GITHUB_SHA
+
+      # Archive the Terraform state and lock-hcl files
+      - name: Store TfState and Lock-HCL Files
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with: 
+          name: ${{env.TF_ARTIFACTS_NAME}}
+          path: | 
+            ./terraform.tfstate
+            ./.terraform.lock.hcl
+          include-hidden-files: true
+          overwrite: true
