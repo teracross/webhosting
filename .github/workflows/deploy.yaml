@@ -111,8 +111,8 @@ jobs:
         with: 
           name: ${{env.TF_ARTIFACTS_NAME}}
           path: | 
-            ./terraform.tfstate
-            ./.terraform.lock.hcl
+            terraform.tfstate
+            .terraform.lock.hcl
           include-hidden-files: true
           overwrite: true
 
