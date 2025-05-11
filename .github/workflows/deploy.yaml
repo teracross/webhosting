@@ -51,6 +51,7 @@ jobs:
           else 
             echo "nonEmpty=false" >> $GITHUB_OUTPUT
             echo "Either Google Drive file was not downloaded OR is empty."
+          fi
 
       - name: Download Terraform State and Lock Files
         uses: actions/download-artifact@v4
@@ -64,6 +65,7 @@ jobs:
             echo "Terraform tfstate file downloaded and is not empty."
           else 
             echo "Terraform tfstate file was not downloaded OR is empty."
+          fi
 
       - name: Verify Terraform Lock-HCL File Downloaded
         run: |
@@ -71,6 +73,7 @@ jobs:
             echo "Terraform Lock-HCL file downloaded and is not empty."
           else 
             echo "Terraform Lock-HCL file was not downloaded OR is empty."
+          fi
 
       - name: Terraform Init
         run: terraform init
