@@ -23,11 +23,12 @@ jobs:
       TF_VAR_AWS_IAM_USER: ${{ secrets.AWS_IAM_USER}}
       TF_VAR_AWS_DEPLOYMENT_ROLE: ${{ secrets.AWS_DEPLOYMENT_ROLE}}
       TF_ARTIFACTS_NAME: TFStateAndLockFiles
+      TF_FOLDER_PATH: ./deployment/aws/terraform
 
     defaults:
       run:
         shell: bash
-        working-directory: ./deployment/aws/terraform
+        working-directory: ${{env.TF_FOLDER_PATH}}
 
     steps:
       - name: Checkout Github repository
@@ -101,7 +102,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.sha }}
-          path: ./${{ github.sha }}
+          path: ${{env.TF_FOLDER_PATH}}/${{ github.sha }}
           include-hidden-files: true
         if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
     
@@ -117,8 +118,8 @@ jobs:
         with: 
           name: ${{env.TF_ARTIFACTS_NAME}}
           path: | 
-            terraform.tfstate
-            .terraform.lock.hcl
+            ${{env.TF_FOLDER_PATH}}/terraform.tfstate
+            ${{env.TF_FOLDER_PATH}}/.terraform.lock.hcl
           include-hidden-files: true
           overwrite: true
 
