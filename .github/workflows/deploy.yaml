@@ -89,7 +89,7 @@ jobs:
         if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
 
       - name: Terraform Plan
-        run: terraform plan -input=false
+        run: terraform plan -input=false -out=$GITHUB_SHA
         if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
 
       - name: Archive plan file 
