@@ -92,6 +92,7 @@ jobs:
         run: |
           terraform plan -input=false -out=$GITHUB_SHA
           ls -la
+          cat $GITHUB_SHA
         if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
 
       - name: Archive plan file 
