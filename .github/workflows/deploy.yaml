@@ -52,6 +52,8 @@ jobs:
             echo "nonEmpty=false" >> $GITHUB_OUTPUT
             echo "Either Google Drive file was not downloaded OR is empty."
           fi
+          pwd 
+          ls -la
 
       - name: Download Terraform State and Lock Files
         uses: actions/download-artifact@v4
