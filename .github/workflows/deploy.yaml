@@ -102,6 +102,7 @@ jobs:
         with:
           name: ${{ github.sha }}
           path: ./${{ github.sha }}
+          include-hidden-files: true
         if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
     
       # Deployment should only run once changes have been merged into master
