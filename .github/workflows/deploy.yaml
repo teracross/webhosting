@@ -104,6 +104,12 @@ jobs:
       #   if: github.event_name == 'push' && ${{steps.DriveFileVerification.outputs.nonEmpty}}
       #   run: terraform apply $GITHUB_SHA
 
+      # TODO: remove - debugging statement to see files present in current working directory
+      - name: list current directory and files present
+        run: |
+          pwd
+          ls -la
+
       # Archive the Terraform state and lock-hcl files
       - name: Store TfState and Lock-HCL Files
         if: github.event_name == 'push'
@@ -116,7 +122,7 @@ jobs:
           include-hidden-files: true
           overwrite: true
 
-            # Cleanup - ensure downloaded artifacts are removed from runner
+      # Cleanup - ensure downloaded artifacts are removed from runner
       - name: Cleanup - remove artifacts
         if: always()
         run: |
