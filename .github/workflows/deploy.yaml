@@ -42,11 +42,14 @@ jobs:
           name: GoogleDriveFile
           path: ./deployment/aws/terraform
       
-      - name: Check if Google Drive file downloaded properly from cache
+      - id: DriveFileVerification
+        name: Check if Google Drive file downloaded properly from cache
         run: |
           if [ -s index.html ]; then
+            echo "nonEmpty=true" >> $GITHUB_OUTPUT
             echo "Google Drive file downloaded and is not empty."
           else 
+            echo "nonEmpty=false" >> $GITHUB_OUTPUT
             echo "Either Google Drive file was not downloaded OR is empty."
 
       - name: Download Terraform State and Lock Files
@@ -71,25 +74,30 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
 
       - name: Terraform Format
         run: terraform fmt -check
+        if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
       
       - name: Terraform Validate
         run: terraform validate
+        if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
 
       - name: Terraform Plan
         run: terraform plan -input=false -out=$GITHUB_SHA
+        if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
 
       - name: Archive plan file 
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.sha }}
           path: ./${{ github.sha }}
+        if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
     
       # Deployment should only run once changes have been merged into master
       # - name: Terraform Deploy
-      #   if: github.event_name == 'push'
+      #   if: github.event_name == 'push' && ${{steps.DriveFileVerification.outputs.nonEmpty}}
       #   run: terraform apply $GITHUB_SHA
 
       # Archive the Terraform state and lock-hcl files
