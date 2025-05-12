@@ -105,7 +105,6 @@ resource "aws_cloudfront_distribution" "webhosting_distribution" {
     aws_cloudfront_origin_access_control.bucket_oac,
     module.cloudfront_waf.wafv2_arn,
     module.s3_bucket.s3_bucket_arn,
-    aws_s3_object.css_sheet,
     aws_s3_object.index_page
   ]
 }
