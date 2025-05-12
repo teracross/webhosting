@@ -73,7 +73,7 @@ jobs:
         with: 
            name: ${{env.ARTIFACT_NAME}}
            path: ${{env.WORKING_DIR}}/index.html
-           retention-days: 9
+           retention-days: 7
            overwrite: true
            include-hidden-files: true
         if: ${{ steps.verification.outputs.nonEmpty }}

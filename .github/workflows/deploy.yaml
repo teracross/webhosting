@@ -104,6 +104,7 @@ jobs:
           name: ${{ github.sha }}
           path: ${{env.TF_FOLDER_PATH}}/${{ github.sha }}
           include-hidden-files: true
+          retention-days: 30
         if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
     
       # Deployment should only run once changes have been merged into master
@@ -122,6 +123,7 @@ jobs:
             ${{env.TF_FOLDER_PATH}}/.terraform.lock.hcl
           include-hidden-files: true
           overwrite: true
+          retention-days: 90
 
       # Cleanup - ensure downloaded artifacts are removed from runner
       - name: Cleanup - remove artifacts
