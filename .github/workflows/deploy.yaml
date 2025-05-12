@@ -54,12 +54,13 @@ jobs:
             echo "Either Google Drive file was not downloaded OR is empty."
           fi
 
+      # Note - github token needed so that actions download can access tfstate files from previous workflow run
       - name: Download Terraform State and Lock Files
         uses: actions/download-artifact@v4
         with: 
-          # name: ${{env.TF_ARTIFACTS_NAME}}
+          name: ${{env.TF_ARTIFACTS_NAME}}
           path: ./deployments/aws/terraform
-          artifact-ids: 3103638698 
+          github-token: ${{secrets.GITHUB_TOKEN}}
         continue-on-error: true
           
       - name: Verify Terraform TfState File Downloaded
