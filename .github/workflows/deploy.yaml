@@ -60,7 +60,7 @@ jobs:
         with: 
           name: ${{env.TF_ARTIFACTS_NAME}}
           path: ./deployments/aws/terraform
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{secrets.ARTIFACT_READ_ACCESS}}
         continue-on-error: true
           
       - name: Verify Terraform TfState File Downloaded
