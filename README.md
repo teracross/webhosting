@@ -7,6 +7,7 @@ Project utilizing various DevOps tech stacks for web hosting.
 - Google Cloud permissioning for direct access to a single Google Drive file is not so straightforward
 - On Github, secrets stored under Secrets and Variables -> Actions can be accessed by anyone with collaborator access. Secrets and Variables -> Codespaces are encrypted, not passed to forks and are not accessible by all collaborators. 
 - Github Codespaces secrets are NOT accessible in Github Actions Workflows.
+- Github actions/upload-artifact@v4 default working directory cannot be set through `defaults` section in github action YAML.
 
 
 # references
