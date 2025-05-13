@@ -20,3 +20,13 @@
      - https://mahendranp.medium.com/configure-github-openid-connect-oidc-provider-in-aws-b7af1bca97dd
 
 - composite GitHub Actions: https://medium.com/@gallaghersam95/the-best-terraform-cd-pipeline-with-github-actions-6ecbaa5f3762
+
+- actions/download-artifact@v4 documentation: https://github.com/actions/download-artifact
+
+- actions/upload-artifact@v4 documentation: https://github.com/actions/upload-artifact
+
+- permissions required for Github access token: https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
+
+- implementation for obtain previous workflow run id: https://stackoverflow.com/questions/64868918/how-to-download-artifact-release-asset-in-another-workflow
+
+- context avaible under github context in workflows: https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#github-context

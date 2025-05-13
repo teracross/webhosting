@@ -8,6 +8,7 @@ Project utilizing various DevOps tech stacks for web hosting.
 - On Github, secrets stored under Secrets and Variables -> Actions can be accessed by anyone with collaborator access. Secrets and Variables -> Codespaces are encrypted, not passed to forks and are not accessible by all collaborators. 
 - Github Codespaces secrets are NOT accessible in Github Actions Workflows.
 - Github actions/upload-artifact@v4 default working directory cannot be set through `defaults` section in github action YAML.
+- Github actions artifacts context is limited to the current workflow being run. In order to access artifacts generated from a previous workflow run the run id, github ref/ branch name and Github PAT (Personal Access Token) with necessary credentials are needed.
 
 
 # references
@@ -27,4 +28,5 @@ In order to test locally, `tflocal` was used in conjunction with localstack to e
 * [X] add github actions CI/CD 
 * [ ] add AWS CodePipline CI/CD
 * ~~[ ] add localstack testing to CI/CD pipeline to verify html page works~~ (using Google Drive direct download to HTML file)
-* [ ] create repository(s) to build Docker images used for downloading the Google Drive file and another image for deploying resources (justification - potential setup/ startup efficiency gain on CI/CD environment initiation)
+* [ ] explore create repository(s) to build Docker images used for downloading the Google Drive file and another image for deploying resources (justification - potential setup/ startup efficiency gain on CI/CD environment initiation)
+* [ ] explore use of semantic versioning triggered through Google AppsScript
