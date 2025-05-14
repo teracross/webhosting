@@ -22,7 +22,7 @@ jobs:
       TF_VAR_AWS_ROOT_USER: ${{ secrets.AWS_ROOT_USER }}
       TF_VAR_AWS_IAM_USER: ${{ secrets.AWS_IAM_USER}}
       TF_VAR_AWS_DEPLOYMENT_ROLE: ${{ secrets.AWS_DEPLOYMENT_ROLE}}
-      TF_ARTIFACTS_NAME: TFStateAndLockFiles
+      TF_ARTIFACTS_NAME: "TFStateAndLockFiles"
       TF_FOLDER_PATH: ./deployment/aws/terraform
 
     defaults:
@@ -64,6 +64,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
+      # TODO: figure out why artifacts are not found on GHA even though `gh run view <run-id> -r <GH repo URL> -w` shows that the artifact is present
       # Note - github token needed so that actions download can access tfstate files from previous workflow run
       - name: Download Terraform State and Lock Files
         uses: actions/download-artifact@v4
@@ -73,6 +74,8 @@ jobs:
           github-token: ${{secrets.ARTIFACT_READ_ACCESS}}
           run-id: ${{steps.GetPreviousRunId.outputs.runId}}
         continue-on-error: true
+        env: 
+          GH_TOKEN: ${{secrets.ARTIFACT_READ_ACCESS}}
           
       - name: Verify Terraform TfState File Downloaded
         run: |
