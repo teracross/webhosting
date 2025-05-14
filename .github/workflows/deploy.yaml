@@ -54,6 +54,13 @@ jobs:
             echo "Either Google Drive file was not downloaded OR is empty."
           fi
 
+      # Note - this MAY need to be changed if github ref value in Google AppsScript workflow dispatch payload is changed to not use the branch name
+      - id: GetPreviousRunId
+        name: Retrieve run id of last workflow execution from the same branch
+        run: |
+          RUN_ID: $(gh run --repo ${{github.repositoryUrl}} list -w ${{github.workflow}} -b ${{github.ref_name}} --json conclusion --json databaseId --jq 'first(.[] | select(.conclusion == "success")).databaseId' )
+          echo "runId=${RUN_ID}" >> $GITHUB_OUTPUT
+
       # Note - github token needed so that actions download can access tfstate files from previous workflow run
       - name: Download Terraform State and Lock Files
         uses: actions/download-artifact@v4
@@ -61,6 +68,7 @@ jobs:
           name: ${{env.TF_ARTIFACTS_NAME}}
           path: ./deployments/aws/terraform
           github-token: ${{secrets.ARTIFACT_READ_ACCESS}}
+          run-id: ${{steps.GetPreviousRunId.outputs.runId}}
         continue-on-error: true
           
       - name: Verify Terraform TfState File Downloaded
