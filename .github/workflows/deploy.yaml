@@ -61,6 +61,8 @@ jobs:
           WORKFLOW_ID= $(gh workflow list --repo ${{github.repositoryUrl}} --json id,name --jq '.[] | select(.name == ${{github.workflow}}).id')
           RUN_ID: $(gh run --repo ${{github.repositoryUrl}} list -w ${WORKFLOW_ID} -b ${{github.ref_name}} --json conclusion --json databaseId --jq 'first(.[] | select(.conclusion == "success")).databaseId' )
           echo "runId=${RUN_ID}" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       # Note - github token needed so that actions download can access tfstate files from previous workflow run
       - name: Download Terraform State and Lock Files
