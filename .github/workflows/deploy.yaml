@@ -69,7 +69,7 @@ jobs:
           gh run download ${{steps.GetPreviousRunId.outputs.runId}} --repo ${{github.repositoryUrl}} -n ${{env.TF_ARTIFACTS_NAME}}
           ls -la
         env: 
-          GH_TOKEN: ${{secrets.ARTIFACT_READ_ACCESS}}
+          GH_TOKEN: ${{ github.token }}
         continue-on-error: true
 
       # TODO: figure out why artifacts are not found on GHA even though `gh run view <run-id> -r <GH repo URL> -w` shows that the artifact is present
