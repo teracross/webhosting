@@ -70,12 +70,10 @@ jobs:
         uses: actions/download-artifact@v4
         with: 
           name: ${{env.TF_ARTIFACTS_NAME}}
-          path: ./deployments/aws/terraform
+          path: ${{env.TF_FOLDER_PATH}}
           github-token: ${{secrets.ARTIFACT_READ_ACCESS}}
           run-id: ${{steps.GetPreviousRunId.outputs.runId}}
         continue-on-error: true
-        env: 
-          GH_TOKEN: ${{secrets.ARTIFACT_READ_ACCESS}}
           
       - name: Verify Terraform TfState File Downloaded
         run: |
