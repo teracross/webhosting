@@ -68,7 +68,7 @@ jobs:
       - name: Download Terraform State and Lock Files using Githuh CLI
         run: |
           gh run download ${{steps.GetPreviousRunId.outputs.runId}} --repo ${{github.repositoryUrl}} -n ${{env.TF_ARTIFACTS_NAME}}
-          echo "::debug:: ${ls -la}"
+          echo "::debug:: $(ls -la)"
         env: 
           GH_TOKEN: ${{ github.token }}
         continue-on-error: true
