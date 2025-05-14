@@ -49,9 +49,9 @@ jobs:
       - name: Create credentials file for Google
         run: |
           echo $GOOGLE_SERVICE_ACCOUNT > services_encoded.json
-          wc -c services_encoded.json
+          echo "::debug:: $(wc -c services_encoded.json)"
           cat services_encoded.json | base64 -di > services.json
-          wc -c services.json
+          echo "::debug:: $(wc -c services.json)"
 
       - name: Download file from Google Drive
         run: python3 ./GoogleDriveFileDownloader.py

@@ -48,10 +48,10 @@ jobs:
         run: |
           if [ -s index.html ]; then
             echo "nonEmpty=true" >> $GITHUB_OUTPUT
-            echo "Google Drive file downloaded and is not empty."
+            echo "::debug:: Google Drive file downloaded and is not empty."
           else 
             echo "nonEmpty=false" >> $GITHUB_OUTPUT
-            echo "Either Google Drive file was not downloaded OR is empty."
+            echo "::debug:: Either Google Drive file was not downloaded OR is empty."
           fi
 
       # Note - this MAY need to be changed if github ref value in Google AppsScript workflow dispatch payload is changed to not use the branch name
@@ -68,7 +68,7 @@ jobs:
       - name: Download Terraform State and Lock Files using Githuh CLI
         run: |
           gh run download ${{steps.GetPreviousRunId.outputs.runId}} --repo ${{github.repositoryUrl}} -n ${{env.TF_ARTIFACTS_NAME}}
-          ls -la
+          echo "::debug:: ${ls -la}"
         env: 
           GH_TOKEN: ${{ github.token }}
         continue-on-error: true
@@ -89,17 +89,17 @@ jobs:
       - name: Verify Terraform TfState File Downloaded
         run: |
           if [ -s terraform.tfstate ]; then
-            echo "Terraform tfstate file downloaded and is not empty."
+            echo "::debug:: Terraform tfstate file downloaded and is not empty."
           else 
-            echo "Terraform tfstate file was not downloaded OR is empty."
+            echo "::debug:: Terraform tfstate file was not downloaded OR is empty."
           fi
 
       - name: Verify Terraform Lock-HCL File Downloaded
         run: |
           if [ -s .terraform.lock.hcl ]; then
-            echo "Terraform Lock-HCL file downloaded and is not empty."
+            echo "::debug:: Terraform Lock-HCL file downloaded and is not empty."
           else 
-            echo "Terraform Lock-HCL file was not downloaded OR is empty."
+            echo "::debug:: Terraform Lock-HCL file was not downloaded OR is empty."
           fi
 
       - name: Terraform Init
