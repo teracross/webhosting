@@ -33,3 +33,4 @@ In order to test locally, `tflocal` was used in conjunction with localstack to e
 * ~~[ ] add localstack testing to CI/CD pipeline to verify html page works~~ (using Google Drive direct download to HTML file)
 * [ ] explore create repository(s) to build Docker images used for downloading the Google Drive file and another image for deploying resources (justification - potential setup/ startup efficiency gain on CI/CD environment initiation)
 * [ ] explore use of semantic versioning triggered through Google AppsScript
+* [ ] add secure and gated way to delete infra stack 
