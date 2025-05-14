@@ -11,6 +11,8 @@ Project utilizing various DevOps tech stacks for web hosting.
 - Github actions artifacts context is limited to the current workflow being run. In order to access artifacts generated from a previous workflow run the run id, github ref/ branch name and Github PAT (Personal Access Token) with necessary credentials are needed.
 - Github actions workflow IDs are based off of the workflow file and unique across the repo. However, they are not unique across branches. For example, the workflow ID of the deploy.yaml file is the same on both branches "main" and "other_branch"
 
+# side note
+- It seems that the default github token is sufficient for accessing workflow run artifacts even from previous workflow runs when using the Github CLI in Github Actions. However, this does not seem to be supported with `actions/download-artifact@v4` as documented (https://github.com/actions/download-artifact#:~:text=By%20default%2C%20the%20permissions%20are%20scoped%20so%20they%20can%20only%20download%20Artifacts%20within%20the%20current%20workflow%20run). In my testing even after adding a Github fine-grained personal access token, to the `actions/download-artifact@v4` Github Actions workflow download artifact step in [deploy.yaml](/.github/workflows/deploy.yaml) this did not work. 
 
 # references
 References that were handy/ useful for this project: [references.md](/references.md)
