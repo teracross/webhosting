@@ -30,3 +30,7 @@
 - implementation for obtain previous workflow run id: https://stackoverflow.com/questions/64868918/how-to-download-artifact-release-asset-in-another-workflow
 
 - context avaible under github context in workflows: https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#github-context
+
+- Github CLI (Command Line Interface): https://docs.github.com/en/github-cli/github-cli/github-cli-reference
+
+- JQ the command-line JSON processor (can be used in-line with Github CLI output to filter/ process output data): https://docs.github.com/en/github-cli/github-cli/github-cli-reference

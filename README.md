@@ -9,6 +9,7 @@ Project utilizing various DevOps tech stacks for web hosting.
 - Github Codespaces secrets are NOT accessible in Github Actions Workflows.
 - Github actions/upload-artifact@v4 default working directory cannot be set through `defaults` section in github action YAML.
 - Github actions artifacts context is limited to the current workflow being run. In order to access artifacts generated from a previous workflow run the run id, github ref/ branch name and Github PAT (Personal Access Token) with necessary credentials are needed.
+- Github actions workflow IDs are based off of the workflow file and unique across the repo. However, they are not unique across branches. For example, the workflow ID of the deploy.yaml file is the same on both branches "main" and "other_branch"
 
 
 # references
