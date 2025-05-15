@@ -37,3 +37,4 @@ Also, note that in the [download.yaml#L87](.github/workflows/download.yaml#L87) 
 * ~~[ ] add localstack testing to CI/CD pipeline to verify html page works~~ (using Google Drive direct download to HTML file)
 * [ ] explore create repository(s) to build Docker images used for downloading the Google Drive file and another image for deploying resources (justification - potential setup/ startup efficiency gain on CI/CD environment initiation)
 * [ ] explore use of semantic versioning triggered through Google AppsScript
+* [ ] determine the name of the files cached in the artifact from the download artifact step
