@@ -3,9 +3,12 @@
 name: 'Terraform Build and Deploy'
 
 on:
-  workflow_run: 
-    workflows: ['Download Google Drive File']
-    types: [completed]
+  workflow_call: 
+    inputs: 
+      artifact-name: 
+        required: true
+        type: string
+        description: Name of artifact cached - contains index.html file to be uploaded to S3
 
 # Redundant, however leaving here for good measure as this is required
 permissions:
@@ -37,7 +40,7 @@ jobs:
       - name: Download cached HTML artifact from Github Artifact cache
         uses: actions/download-artifact@v4
         with: 
-          name: GoogleDriveFile
+          name: ${{inputs.artifact-name}}
           path: ./deployment/aws/terraform
       
       - id: DriveFileVerification
