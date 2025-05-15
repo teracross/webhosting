@@ -15,11 +15,15 @@ Project utilizing various DevOps tech stacks for web hosting.
 # references
 References that were handy/ useful for this project: [references.md](/references.md)
 
-#  local testing
+# local testing
 Note - s3 bucket website is saved on http://<bucket_name>.s3-website.localhost.localstack.cloud:4566
 
 In order to test locally, `tflocal` was used in conjunction with localstack to emulate an AWS-like environment. However, one downside with this approach is that the actual bucket policy permissions will need to be tested on real AWS. 
 
+# debug steps
+In order to enable debugging logging in Github actions, the `ACTIONS_RUNNER_DEBUG` value must be set to true. 
+
+Also, note that in the [download.yaml#L87](.github/workflows/download.yaml#L87) depending on the tag/branch version of the deploy.yaml file to be executed the github branch reference at the end (after the "@") will need to be changed to the desired branch, tag or SHA. 
 
 # TODOs/ future changes
 
