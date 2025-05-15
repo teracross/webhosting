@@ -84,7 +84,7 @@ jobs:
           run-id: ${{steps.GetPreviousRunId.outputs.runId}}
           github-token: ${{secrets.ARTIFACT_READ_ACCESS}}
         continue-on-error: true
-        if: false
+
           
       - name: Verify Terraform TfState File Downloaded
         run: |
