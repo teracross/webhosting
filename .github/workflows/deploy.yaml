@@ -19,9 +19,6 @@ jobs:
     # automation only runs if previous workflow was successful
 
     env: 
-      TF_VAR_AWS_ROOT_USER: ${{ secrets.AWS_ROOT_USER }}
-      TF_VAR_AWS_IAM_USER: ${{ secrets.AWS_IAM_USER}}
-      TF_VAR_AWS_DEPLOYMENT_ROLE: ${{ secrets.AWS_DEPLOYMENT_ROLE}}
       TF_ARTIFACTS_NAME: "TFStateAndLockFiles"
       TF_FOLDER_PATH: ./deployment/aws/terraform
 
@@ -125,6 +122,10 @@ jobs:
         if: github.event_name == 'push' && ${{steps.DriveFileVerification.outputs.nonEmpty}}
         run: terraform apply $GITHUB_SHA
         continue-on-error: true
+        env: 
+          TF_VAR_AWS_ROOT_USER: ${{ secrets.AWS_ROOT_USER }}
+          TF_VAR_AWS_IAM_USER: ${{ secrets.AWS_IAM_USER }}
+          TF_VAR_AWS_DEPLOYMENT_ROLE: ${{ secrets.AWS_DEPLOYMENT_ROLE }}
 
       # Archive the Terraform state and lock-hcl files
       - name: Archive TfState and Lock-HCL Files
