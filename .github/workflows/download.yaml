@@ -21,7 +21,7 @@ jobs:
       GOOGLE_FILE_ID: ${{ secrets.GOOGLE_FILE_ID }}
       GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
       WORKING_DIR: ./.github/scripts
-      REUSABLE_WORKFLOW_PATH: teracross/webhosting/.github/workflows/deploy.yaml@${{github.ref_name}}
+      REUSABLE_WORKFLOW_PATH: teracross/webhosting/.github/workflows/deploy.yaml@main
 
     defaults:
       run:
