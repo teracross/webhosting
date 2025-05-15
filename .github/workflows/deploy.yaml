@@ -65,13 +65,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
       # Note - github cli seems to be able to download the artifact using the default github auth token, but using a fine-grained PAT doesn't seem to work? 
-      - name: Download Terraform State and Lock Files using Githuh CLI
-        run: |
-          gh run download ${{steps.GetPreviousRunId.outputs.runId}} --repo ${{github.repositoryUrl}} -n ${{env.TF_ARTIFACTS_NAME}}
-          echo "::debug:: $(ls -la)"
-        env: 
-          GH_TOKEN: ${{ github.token }}
-        continue-on-error: true
+      # - name: Download Terraform State and Lock Files using Githuh CLI
+      #   run: |
+      #     gh run download ${{steps.GetPreviousRunId.outputs.runId}} --repo ${{github.repositoryUrl}} -n ${{env.TF_ARTIFACTS_NAME}}
+      #     echo "::debug:: $(ls -la)"
+      #   env: 
+      #     GH_TOKEN: ${{ github.token }}
+      #   continue-on-error: true
 
       # TODO: figure out why artifacts are not found on GHA even though step above shows that artifact is present
       # Note - disabled because doesn't seem to be working
