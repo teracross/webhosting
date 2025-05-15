@@ -102,6 +102,10 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false -out=$GITHUB_SHA
         if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
+        env: 
+          TF_VAR_AWS_ROOT_USER: ${{ secrets.AWS_ROOT_USER }}
+          TF_VAR_AWS_IAM_USER: ${{ secrets.AWS_IAM_USER }}
+          TF_VAR_AWS_DEPLOYMENT_ROLE: ${{ secrets.AWS_DEPLOYMENT_ROLE }}
 
       - name: Debug Terraform Plan output
         run: |
