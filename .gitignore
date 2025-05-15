@@ -8,6 +8,7 @@ logFile
 deploy
 **.terraform
 .terraform.tfstate.lock.info
+*.tfvars
 
 # TODO: create deployment file artifacts for GHA with GitSHA suffix
 
@@ -18,3 +19,4 @@ deployment/aws/terraform/s3/s3deploy
 deployment/aws/terraform/waf/wafDeploy
 .vscode/
 .venv/
+index.html

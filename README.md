@@ -7,7 +7,10 @@ Project utilizing various DevOps tech stacks for web hosting.
 - Google Cloud permissioning for direct access to a single Google Drive file is not so straightforward
 - On Github, secrets stored under Secrets and Variables -> Actions can be accessed by anyone with collaborator access. Secrets and Variables -> Codespaces are encrypted, not passed to forks and are not accessible by all collaborators. 
 - Github Codespaces secrets are NOT accessible in Github Actions Workflows.
-
+- Github actions/upload-artifact@v4 default working directory cannot be set through `defaults` section in github action YAML.
+- Github actions artifacts context is limited to the current workflow being run. In order to access artifacts generated from a previous workflow run the run id, github ref/ branch name and Github PAT (Personal Access Token) with necessary credentials are needed.
+- Github actions workflow IDs are based off of the workflow file and unique across the repo. However, they are not unique across branches. For example, the workflow ID of the deploy.yaml file is the same on both branches "main" and "other_branch"
+- Github actions called workflow (a.k.a. reusuable workflow) doesn't have access to repository Github actions secrets that calling workflow has access to. Secrets must be passed through individually in either calling workflow in the `with` portion as variables that are passed through -OR- passed through by adding `secrets: inherit` to where the calling workflow calls the called workflow. 
 
 # references
 References that were handy/ useful for this project: [references.md](/references.md)
@@ -22,8 +25,11 @@ In order to test locally, `tflocal` was used in conjunction with localstack to e
 
 * [X] ~~move html page and css import to python script~~ (downloading file directly from Google Drive)
 * [X] pull changes directly from Google Docs file
+* [ ] add secure and gated way to delete infra stack 
+* [ ] Fix/ Enable WAF with ruleset to allow read-only access
 * [ ] add deployment configuration for ansible
 * [X] add github actions CI/CD 
 * [ ] add AWS CodePipline CI/CD
 * ~~[ ] add localstack testing to CI/CD pipeline to verify html page works~~ (using Google Drive direct download to HTML file)
-* [ ] create repository(s) to build Docker images used for downloading the Google Drive file and another image for deploying resources (justification - potential setup/ startup efficiency gain on CI/CD environment initiation)
+* [ ] explore create repository(s) to build Docker images used for downloading the Google Drive file and another image for deploying resources (justification - potential setup/ startup efficiency gain on CI/CD environment initiation)
+* [ ] explore use of semantic versioning triggered through Google AppsScript

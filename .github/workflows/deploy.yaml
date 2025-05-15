@@ -7,6 +7,7 @@ on:
     workflows: ['Download Google Drive File']
     types: [completed]
 
+# Redundant, however leaving here for good measure as this is required
 permissions:
   id-token: write
   contents: read  
@@ -16,57 +17,136 @@ jobs:
     name: 'Terraform Build, Validation and Deployment'
     runs-on: ubuntu-latest
     # automation only runs if previous workflow was successful
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} 
 
     env: 
-      TF_VAR_AWS_ROOT_USER: ${{ secrets.AWS_ROOT_USER }}
-      TF_VAR_AWS_IAM_USER: ${{ secrets.AWS_IAM_USER}}
-      TF_VAR_AWS_DEPLOYMENT_ROLE: ${{ secrets.AWS_DEPLOYMENT_ROLE}}
+      TF_ARTIFACTS_NAME: "TFStateAndLockFiles"
+      TF_FOLDER_PATH: ./deployment/aws/terraform
 
     defaults:
       run:
         shell: bash
-        working-directory: ./deployment/aws/terraform
+        working-directory: ${{env.TF_FOLDER_PATH}}
 
     steps:
       - name: Checkout Github repository
         uses: actions/checkout@v4 
-      
-      # - name: DEBUG - print default working dir and file contents
-      #   run: pwd && ls
-
-      # - name: DEBUG - print workflow dir and file contents
-      #   working-directory: ./.github/workflows/
-      #   run: pwd && ls
-
-      # - name: DEBUG - print actions dir and file contents
-      #   working-directory: ./.github/actions/setup-action/
-      #   run: pwd && ls
 
       - name: Initialize runner
         uses: ./.github/actions/setup-action
 
-      # TODO: download and configure artifacts: (1) HTML file from Google Drive, (2) terraform state files - cached for up to 90 days
+      - name: Download cached HTML artifact from Github Artifact cache
+        uses: actions/download-artifact@v4
+        with: 
+          name: GoogleDriveFile
+          path: ./deployment/aws/terraform
+      
+      - id: DriveFileVerification
+        name: Check if Google Drive file downloaded properly from cache
+        run: |
+          if [ -s index.html ]; then
+            echo "nonEmpty=true" >> $GITHUB_OUTPUT
+            echo "::debug:: Google Drive file downloaded and is not empty."
+          else 
+            echo "nonEmpty=false" >> $GITHUB_OUTPUT
+            echo "::debug:: Either Google Drive file was not downloaded OR is empty."
+          fi
+
+      # Note - this MAY need to be changed if github ref value in Google AppsScript workflow dispatch payload is changed to not use the branch name
+      - id: GetPreviousRunId
+        name: Retrieve run id of last workflow execution from the same branch
+        run: |
+          WORKFLOW_ID=$(gh workflow list --repo ${{github.repositoryUrl}} --json id,name --jq '.[] | select(.name == "${{github.workflow}}").id')
+          RUN_ID=$(gh run --repo ${{github.repositoryUrl}} list -w $WORKFLOW_ID -b ${{github.ref_name}} --json conclusion --json databaseId --jq 'first(.[] | select(.conclusion == "success")).databaseId' )
+          echo "runId=${RUN_ID}" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      # Note - github token needed so that actions download can access tfstate files from previous workflow run
+      - name: Download Terraform State and Lock Files
+        uses: actions/download-artifact@v4
+        with: 
+          name: ${{env.TF_ARTIFACTS_NAME}}
+          path: ${{env.TF_FOLDER_PATH}}
+          run-id: ${{steps.GetPreviousRunId.outputs.runId}}
+          github-token: ${{secrets.ARTIFACT_READ_ACCESS}}
+        continue-on-error: true
+          
+      - name: Verify Terraform TfState File Downloaded
+        run: |
+          if [ -s terraform.tfstate ]; then
+            echo "::debug:: Terraform tfstate file downloaded and is not empty."
+          else 
+            echo "::debug:: Terraform tfstate file was not downloaded OR is empty."
+          fi
+
+      - name: Verify Terraform Lock-HCL File Downloaded
+        run: |
+          if [ -s .terraform.lock.hcl ]; then
+            echo "::debug:: Terraform Lock-HCL file downloaded and is not empty."
+          else 
+            echo "::debug:: Terraform Lock-HCL file was not downloaded OR is empty."
+          fi
 
       - name: Terraform Init
         run: terraform init
+        if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
 
       - name: Terraform Format
         run: terraform fmt -check
+        if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
       
       - name: Terraform Validate
         run: terraform validate
+        if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
 
       - name: Terraform Plan
         run: terraform plan -input=false -out=$GITHUB_SHA
+        if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
+        env: 
+          TF_VAR_AWS_ROOT_USER: ${{ secrets.AWS_ROOT_USER }}
+          TF_VAR_AWS_IAM_USER: ${{ secrets.AWS_IAM_USER }}
+          TF_VAR_AWS_DEPLOYMENT_ROLE: ${{ secrets.AWS_DEPLOYMENT_ROLE }}
+
+      - name: Debug Terraform Plan output
+        run: |
+          echo "::debug:: $(ls -la)"
+          echo "::debug:: $(wc -c $GITHUB_SHA)"
 
       - name: Archive plan file 
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.sha }}
-          path: ./
+          path: ${{env.TF_FOLDER_PATH}}/${{ github.sha }}
+          include-hidden-files: true
+          retention-days: 30
+        if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
     
       # Deployment should only run once changes have been merged into master
       - name: Terraform Deploy
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && ${{steps.DriveFileVerification.outputs.nonEmpty}}
         run: terraform apply $GITHUB_SHA
+        continue-on-error: true
+        env: 
+          TF_VAR_AWS_ROOT_USER: ${{ secrets.AWS_ROOT_USER }}
+          TF_VAR_AWS_IAM_USER: ${{ secrets.AWS_IAM_USER }}
+          TF_VAR_AWS_DEPLOYMENT_ROLE: ${{ secrets.AWS_DEPLOYMENT_ROLE }}
+
+      # Archive the Terraform state and lock-hcl files
+      - name: Archive TfState and Lock-HCL Files
+        uses: actions/upload-artifact@v4
+        with: 
+          name: ${{env.TF_ARTIFACTS_NAME}}
+          path: | 
+            ${{env.TF_FOLDER_PATH}}/terraform.tfstate
+            ${{env.TF_FOLDER_PATH}}/.terraform.lock.hcl
+          include-hidden-files: true
+          overwrite: true
+          retention-days: 90
+
+      # Cleanup - ensure downloaded artifacts are removed from runner
+      - name: Cleanup - remove artifacts
+        run: |
+          rm -f terraform.tfstate
+          rm -f .terraform.lock.hcl
+          rm -f index.html
+        

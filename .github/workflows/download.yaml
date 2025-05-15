@@ -1,6 +1,10 @@
 name: 'Download Google Drive File'
 
+env: 
+  ARTIFACT_NAME: GoogleDriveFile
+
 on:
+  # TODO: swap the workflow dispatch to trigger on the deployment flow and make the download workflow the called resuable workflow
   workflow_dispatch: 
     inputs: 
       tags:
@@ -16,12 +20,15 @@ jobs:
     env: 
       GOOGLE_FILE_ID: ${{ secrets.GOOGLE_FILE_ID }}
       GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-
+      WORKING_DIR: ./.github/scripts
 
     defaults:
       run:
         shell: bash
-        working-directory: ./.github/scripts
+        working-directory: ${{env.WORKING_DIR}}
+
+    outputs: 
+      file:  ${{steps.verification.outputs.nonEmpty}}
 
     steps:
       - name: Checkout Github repository
@@ -39,23 +46,50 @@ jobs:
       - name: Create credentials file for Google
         run: |
           echo $GOOGLE_SERVICE_ACCOUNT > services_encoded.json
-          wc -c services_encoded.json
+          echo "::debug:: $(wc -c services_encoded.json)"
           cat services_encoded.json | base64 -di > services.json
-          wc -c services.json
+          echo "::debug:: $(wc -c services.json)"
 
       - name: Download file from Google Drive
         run: python3 ./GoogleDriveFileDownloader.py
 
+      - id: verification
+        name: Verify non-empty file was downloaded
+        run:  |
+          if [ -s index.html ]; then
+            echo "nonEmpty=true" >> $GITHUB_OUTPUT
+          else 
+            echo "nonEmpty=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate job outputs stored properly
+        run: echo "Job output is ${{ toJson(steps.verification.outputs.nonEmpty) }}"
+
       - name: Cache the file - to be used in deployment workflow
         uses: actions/upload-artifact@v4
         with: 
-           name: GoogleDriveFile
-           path: ./index.html
-           retention-days: 9
+           name: ${{env.ARTIFACT_NAME}}
+           path: ${{env.WORKING_DIR}}/index.html
+           retention-days: 7
            overwrite: true
-
-      - name: cleanup - ensure credentials removed from runner
+           include-hidden-files: true
+        if: ${{ steps.verification.outputs.nonEmpty }}
+        
+      - name: cleanup - ensure credentials and temporary files removed from runner
         run: |
           rm -f services.json
           rm -f services_decoded.json
-        if: ${{ always() }}
+          rm -f index.html
+        if: ${{ always() }} 
+
+  trigger-deployment: 
+    uses:  teracross/webhosting/.github/workflows/deploy.yaml@AdditionalAutomation
+    needs: download
+    with: 
+      artifact-name: ${{github.env.ARTIFACT_NAME}}
+    permissions:
+      id-token: write
+      contents: read 
+    if: ${{ needs.download.outputs.file }}
+    secrets: inherit
+        
