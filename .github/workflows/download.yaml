@@ -11,9 +11,6 @@ on:
         description: "Google AppScript Trigger for Deployment"
         required: false
         type: string
-  # TODO: Remove - for testing purposes only
-  push: 
-    branches: [AdditionalAutomation]
 
 jobs:
   download: 
