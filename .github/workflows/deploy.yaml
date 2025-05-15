@@ -120,8 +120,8 @@ jobs:
 
       - name: Debug Terraform Plan output
         run: |
-          ls -la
-          wc -c $GITHUB_SHA
+          echo "::debug:: $(ls -la)"
+          echo "::debug:: $(wc -c $GITHUB_SHA)"
 
       - name: Archive plan file 
         uses: actions/upload-artifact@v4
