@@ -21,6 +21,7 @@ jobs:
       GOOGLE_FILE_ID: ${{ secrets.GOOGLE_FILE_ID }}
       GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
       WORKING_DIR: ./.github/scripts
+      REUSABLE_WORKFLOW_PATH: teracross/webhosting/.github/workflows/deploy.yaml@main
 
     defaults:
       run:
@@ -83,7 +84,7 @@ jobs:
         if: ${{ always() }} 
 
   trigger-deployment: 
-    uses:  teracross/webhosting/.github/workflows/deploy.yaml@AdditionalAutomation
+    uses:  teracross/webhosting/.github/workflows/deploy.yaml@main
     needs: download
     with: 
       artifact-name: ${{github.env.ARTIFACT_NAME}}
