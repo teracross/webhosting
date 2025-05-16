@@ -34,3 +34,11 @@
 - Github CLI (Command Line Interface): https://docs.github.com/en/github-cli/github-cli/github-cli-reference
 
 - JQ the command-line JSON processor (can be used in-line with Github CLI output to filter/ process output data): https://docs.github.com/en/github-cli/github-cli/github-cli-reference
+
+- retrieving previous workflow state: https://github.com/orgs/community/discussions/101518
+
+- reusable workflows: https://docs.github.com/en/actions/sharing-automations/reusing-workflows
+
+- Github Actions debug logging: 
+     - https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/troubleshooting-workflows/enabling-debug-logging
+     - https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#example-setting-a-debug-message
