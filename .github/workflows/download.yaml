@@ -83,8 +83,9 @@ jobs:
           rm -f index.html
         if: ${{ always() }} 
 
+  #TODO: revert back to "main" version 
   trigger-deployment: 
-    uses:  teracross/webhosting/.github/workflows/deploy.yaml@main
+    uses:  teracross/webhosting/.github/workflows/deploy.yaml@AdditionalAutomation
     needs: download
     with: 
       artifact-name: ${{github.env.ARTIFACT_NAME}}
