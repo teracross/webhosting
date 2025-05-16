@@ -129,7 +129,7 @@ jobs:
     
       # Deployment should only run once changes have been merged into master
       - name: Terraform Deploy
-        if: ${{false}} && ${{steps.DriveFileVerification.outputs.nonEmpty}}
+        if: ${{steps.DriveFileVerification.outputs.nonEmpty}}
         run: terraform apply $GITHUB_SHA
         continue-on-error: true
         env: 
