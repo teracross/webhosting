@@ -42,6 +42,8 @@ jobs:
         with: 
           name: ${{inputs.artifact-name}}
           path: ${{env.TF_FOLDER_PATH}}
+          run-id: ${{github.run_id}}
+          merge-multiple: true # in case workflow is re-run
       
       - id: DriveFileVerification
         name: Check if Google Drive file downloaded properly from cache
