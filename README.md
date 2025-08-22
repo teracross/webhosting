@@ -29,6 +29,7 @@ Also, note that in the [download.yaml#L87](.github/workflows/download.yaml#L87) 
 
 * [X] ~~move html page and css import to python script~~ (downloading file directly from Google Drive)
 * [X] pull changes directly from Google Docs file
+* [ ] migrate Terraform state file tracking to S3/ Dynamo DB backend (see https://developer.hashicorp.com/terraform/language/v1.1.x/settings/backends/s3)
 * [ ] add secure and gated way to delete infra stack 
 * [ ] Fix/ Enable WAF with ruleset to allow read-only access
 * [ ] add deployment configuration for ansible
